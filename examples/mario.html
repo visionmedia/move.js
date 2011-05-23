@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <script src="../move.js"></script>
+    <script>
+      addEventListener('DOMContentLoaded', function(){
+        addEventListener('keydown', function(e){
+          var player = move('player')
+            .duration(300)
+            .ease('out');
+
+          switch (e.keyCode) {
+            // up
+            case 38:
+              player
+                .add('bottom', 100)
+                .then()
+                  .sub('bottom', 0)
+                  .pop()
+                .end();
+              break;
+            // left
+            case 37:
+              player.sub('left', 100).end();
+              break;
+            // right
+            case 39:
+              player.add('left', 100).end();
+              break;
+          }
+        }, false);
+      }, false);
+    </script>
+
+    <style>
+      #ground {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 80px;
+        background: green;
+      }
+      #player {
+        position: fixed;
+        bottom: 80px;
+        left: 20px;
+        width: 20px;
+        height: 90px;
+        background: grey;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="player"></div>
+    <div id="ground"></div>
+  </body>
+</html>
