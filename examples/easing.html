@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <script src="../move.js"></script>
+    <script>
+      addEventListener('DOMContentLoaded', function(){
+        move('square')
+          .x(500)
+          .y(200)
+          .ease('in-out')
+          .end();
+      }, false);
+    </script>
+
+    <style>
+      #square {
+        border: 1px solid #888;
+        width: 100;
+        height: 100;
+        background-color: white;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="square"></div>
+  </body>
+</html>

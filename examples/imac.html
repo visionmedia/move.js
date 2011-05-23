@@ -1,0 +1,55 @@
+<html>
+  <head>
+    <script src="../move.js"></script>
+    <script>
+      addEventListener('DOMContentLoaded', function(){
+        move('mac')
+          .duration(1000)
+          .set('opacity', 1)
+          .add('left', 500)
+          .end();
+
+        move('mac-title')
+          .add('top', 100)
+          .set('opacity', 1)
+          .duration(1200)
+          .delay(500)
+          .end();
+        
+        move('mac-subtitle')
+          .add('left', 100)
+          .set('opacity', 1)
+          .duration(1200)
+          .delay(1500)
+          .end();
+      }, false);
+    </script>
+
+    <style>
+      #mac {
+        position: absolute;
+        left: 100px;
+        opacity: 0;
+      }
+      #mac-title {
+        position: absolute;
+        top: 100px;
+        left: 210px;
+        opacity: 0;
+      }
+      #mac-subtitle {
+        position: absolute;
+        top: 250px;
+        left: 110px;
+        opacity: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <img
+      id="mac-title"   src="http://images.apple.com/imac/images/overview_allinone_title20110426.png">
+    <img id="mac-subtitle" src="http://images.apple.com/imac/images/overview_allinone_subhead20110426.png">
+    <img id="mac" src="http://images.apple.com/imac/images/overview_allinone20110426.png">
+  </body>
+</html>
