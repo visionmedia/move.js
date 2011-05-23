@@ -3,12 +3,11 @@
     <script src="../move.js"></script>
     <script>
       addEventListener('DOMContentLoaded', function(){
-        var fn = 'cubic-bezier(1,0,0,1)';
-
         move('mac')
           .duration(1000)
           .set('opacity', 1)
           .add('left', 500)
+          .ease(fn)
           .end();
         
         move('mac-title')
@@ -21,7 +20,6 @@
         var purchase = move('purchase')
           .set('opacity', 1)
           .set('left', 200)
-          .ease(fn)
           .then()
             .set('color', '#00B7FF')
             .duration(1000)
