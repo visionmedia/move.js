@@ -42,7 +42,7 @@
 
 ## More Information
 
-  - http://www.roblaplaca.com/examples/bezierBuilder
+  - [cubic-bezier()](http://www.roblaplaca.com/examples/bezierBuilder) generator
 
 ## License 
 
