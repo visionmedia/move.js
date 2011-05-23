@@ -1,4 +1,6 @@
 
+UGLIFY_FLAGS = --no-mangle
+
 move.min.js: move.js
 	@uglifyjs $(UGLIFY_FLAGS) $< > $@ \
 	  && du move.js \
