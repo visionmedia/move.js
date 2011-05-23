@@ -395,8 +395,11 @@
    */
 
   Move.prototype.add = function(prop, val){
-    var curr = parseInt(this.current(prop), 10);
-    return this.set(prop, curr + val);
+    var self = this;
+    return this.on('start', function(){
+      var curr = parseInt(self.current(prop), 10);
+      self.set(prop, curr + val);
+    });
   };
 
   /**
@@ -410,8 +413,11 @@
    */
 
   Move.prototype.sub = function(prop, val){
-    var curr = parseInt(this.current(prop), 10);
-    return this.set(prop, curr - val);
+    var self = this;
+    return this.on('start', function(){
+      var curr = parseInt(self.current(prop), 10);
+      self.set(prop, curr - val);
+    });
   };
 
   /**
@@ -531,6 +537,9 @@
 
   Move.prototype.end = function(fn){
     var self = this;
+
+    // emit "start" event
+    this.emit('start');
 
     // transforms
     if (this._transforms.length) {
