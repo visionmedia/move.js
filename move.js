@@ -14,49 +14,6 @@
   var current = getComputedStyle || currentStyle;
 
   /**
-   * EventEmitter.
-   */
-
-  function EventEmitter() {
-    this.callbacks = {};
-  }
-
-  /**
-   * Listen on the given `event` with `fn`.
-   *
-   * @param {String} event
-   * @param {Function} fn
-   */
-
-  EventEmitter.prototype.on = function(event, fn){
-    (this.callbacks[event] = this.callbacks[event] || [])
-      .push(fn);
-    return this;
-  };
-
-  /**
-   * Emit `event` with the given args.
-   *
-   * @param {String} event
-   * @param {Mixed} ...
-   */
-
-  EventEmitter.prototype.emit = function(event){
-    var args = Array.prototype.slice.call(arguments, 1)
-      , callbacks = this.callbacks[event]
-      , len;
-
-    if (callbacks) {
-      len = callbacks.length;
-      for (var i = 0; i < len; ++i) {
-        callbacks[i].apply(this, args)
-      }
-    }
-
-    return this;
-  };
-
-  /**
    * Initialize a `Move` instance with the given `selector`.
    *
    * @param {String} selector
@@ -67,6 +24,12 @@
   exports.move = function(selector) {
     return new Move(move.select(selector));
   };
+
+  /**
+   * Library version.
+   */
+
+  exports.move.version = '0.0.1';
 
   /**
    * Defaults.
@@ -108,6 +71,49 @@
   move.select = function(selector){
     return document.getElementById(selector)
       || document.querySelectorAll(selector)[0];
+  };
+
+  /**
+   * EventEmitter.
+   */
+
+  function EventEmitter() {
+    this.callbacks = {};
+  }
+
+  /**
+   * Listen on the given `event` with `fn`.
+   *
+   * @param {String} event
+   * @param {Function} fn
+   */
+
+  EventEmitter.prototype.on = function(event, fn){
+    (this.callbacks[event] = this.callbacks[event] || [])
+      .push(fn);
+    return this;
+  };
+
+  /**
+   * Emit `event` with the given args.
+   *
+   * @param {String} event
+   * @param {Mixed} ...
+   */
+
+  EventEmitter.prototype.emit = function(event){
+    var args = Array.prototype.slice.call(arguments, 1)
+      , callbacks = this.callbacks[event]
+      , len;
+
+    if (callbacks) {
+      len = callbacks.length;
+      for (var i = 0; i < len; ++i) {
+        callbacks[i].apply(this, args)
+      }
+    }
+
+    return this;
   };
 
   /**
