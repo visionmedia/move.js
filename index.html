@@ -155,14 +155,19 @@
       body {
         padding: 50px;
         font: 14px/1.5 "helvetica neue", helvetica, arial, sans-serif;
-        color: #a2a2a2;
+        color: #8b8b8b;
       }
-      h1, h2 {
+      h1, h2, h3 {
         font-size: 33px;
         font-weight: normal;
         color: #333;
+        -webkit-font-smoothing: antialiased;
       }
       h2 {
+        display: none;
+        font-size: 33px;
+      }
+      h3 {
         padding: 5px 0;
         font-size: 18px;
         border-bottom: 3px solid #eee;
@@ -212,13 +217,17 @@
     </style>
   </head>
   <body>
-    <h1>Examples</h1>
+    <h1>Move.js</h1>
+    <p>Move.js is a small JavaScript library making CSS3 backed animation
+    extremely simple and elegant.</p>
+
+    <h2>Examples</h2>
 
     <a href="http://github.com/visionmedia/move.js"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://d3nwyuy0nl342s.cloudfront.net/img/7afbc8b248c68eb468279e8c17986ad46549fb71/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub"></a>
 
     <div id="examples">
       <div id="example-1" class="example">
-        <h2>Move#set(prop, val)</h2>
+        <h3>Move#set(prop, val)</h3>
         <p>Set <em>prop</em> to <em>val</em>.</p>
         <a href="#" class="play">Play</a>
         <div class="sandbox">
@@ -234,7 +243,7 @@ move('#example-1 .box')
       </div>
 
       <div id="example-2" class="example">
-        <h2>Move#add(prop, val)</h2>
+        <h3>Move#add(prop, val)</h3>
         <p>Increment <em>prop</em> by <em>val</em>, where <em>val</em>
           is an Number (click several times).</p>
         <a href="#" class="play">Play</a>
@@ -251,7 +260,7 @@ move('#example-2 .box')
       </div>
 
       <div id="example-3" class="example">
-        <h2>Move#sub(prop, val)</h2>
+        <h3>Move#sub(prop, val)</h3>
         <p>Decrement <em>prop</em> by <em>val</em>, where <em>val</em>
           is an Number (click several times).</p>
         <a href="#" class="play">Play</a>
@@ -268,7 +277,7 @@ move('#example-3 .box')
       </div>
 
       <div id="example-4" class="example">
-        <h2>Move#rotate(deg)</h2>
+        <h3>Move#rotate(deg)</h3>
         <p>Rotate by <em>deg</em>.</p>
         <a href="#" class="play">Play</a>
         <div class="sandbox">
@@ -284,7 +293,7 @@ move('#example-4 .box')
       </div>
 
       <div id="example-5" class="example">
-        <h2>Move#duration(n)</h2>
+        <h3>Move#duration(n)</h3>
         <p>Set animation duration to <em>n</em> which is a 
           Number or a string such as "4s".</p>
         <a href="#" class="play">Play</a>
@@ -302,7 +311,7 @@ move('#example-5 .box')
       </div>
 
       <div id="example-6" class="example">
-        <h2>Move#translate(x[, y])</h2>
+        <h3>Move#translate(x[, y])</h3>
         <p>Translate <em>x</em> and optionally <em>y</em> axis. Aliased as <code>Move#to(x[, y])</code>.</p>
         <a href="#" class="play">Play</a>
         <div class="sandbox">
@@ -318,7 +327,7 @@ move('#example-6 .box')
       </div>
 
       <div id="example-7" class="example">
-        <h2>Move#x(n) / Move#y(n)</h2>
+        <h3>Move#x(n) / Move#y(n)</h3>
         <p>Translate <em>x</em> or <em>y</em> axis. Aliased by <code>Move#translateX(n)</code> and <code>Move#translateY(n)</code>.</p>
         <a href="#" class="play">Play</a>
         <div class="sandbox">
@@ -335,7 +344,7 @@ move('#example-7 .box')
       </div>
 
       <div id="example-8" class="example">
-        <h2>Move#skew(x[, y])</h2>
+        <h3>Move#skew(x[, y])</h3>
         <p>Skew <em>x</em>, and optionally <em>y</em>. <code>Move#skewX(n)</code> and <code>Move#skewY(n)</code> are also available.</p>
         <a href="#" class="play">Play</a>
         <div class="sandbox">
@@ -353,7 +362,7 @@ move('#example-8 .box')
       </div>
 
       <div id="example-9" class="example">
-        <h2>Move#scale(x[, y])</h2>
+        <h3>Move#scale(x[, y])</h3>
         <p>Scale the <em>x</em>, and optionally <em>y</em> axis. <code>Move#scaleX(n)</code> and <code>Move#scaleY(n)</code> are also available.</p>
         <a href="#" class="play">Play</a>
         <div class="sandbox">
@@ -369,7 +378,7 @@ move('#example-9 .box')
       </div>
 
       <div id="example-10" class="example">
-        <h2>Move#ease(fn)</h2>
+        <h3>Move#ease(fn)</h3>
         <p>Use the given easing <code>fn</code>.</p>
         <a href="#" class="play">Play</a>
         <div class="sandbox">
@@ -402,7 +411,7 @@ setTimeout(function(){
       </div>
 
       <div id="example-11" class="example">
-        <h2>Move#end([fn])</h2>
+        <h3>Move#end([fn])</h3>
         <p>The <code>end()</code> method triggers the animation
           to play, optionally invoking the callback <em>fn</em> when complete.</p>
         <a href="#" class="play">Play</a>
@@ -424,7 +433,7 @@ move('#example-11 .box')
       </div>
 
       <div id="example-12" class="example">
-        <h2>Move#delay(n)</h2>
+        <h3>Move#delay(n)</h3>
         <p>Set animation delay to <em>n</em> which is a 
           Number or a string such as "4s".</p>
         <a href="#" class="play">Play</a>
@@ -442,7 +451,7 @@ move('#example-12 .box')
       </div>
 
       <div id="example-13" class="example">
-        <h2>Move#then([fn])</h2>
+        <h3>Move#then([fn])</h3>
         <p>Defer an action such as invoking a <em>fn</em>,
           <code>end()</code>ing the given <code>Move</code> instance,
           or returning a clone for chaining. The <code>Move#pop()</code> method is used to return the current <code>Move</code> instance's parent in the chain.</p>
@@ -483,7 +492,7 @@ move('#example-13 .box2')
       </div>
 
       <div class="example">
-        <h2>move.select(selector)</h2>
+        <h3>move.select(selector)</h3>
         <p>This function is used throughout move to select elements. For
           example if we wanted to utilize jQuery, we could re-define
           this function as shown below.</p>
@@ -497,7 +506,7 @@ move.select = function(selector){
       </div>
 
       <div class="example">
-        <h2>move.defaults</h2>
+        <h3>move.defaults</h3>
         <p>Defaults used throughout Move, simply re-define to apply a new default.</p>
         <pre class="source">
           <code>
@@ -509,7 +518,7 @@ move.defaults = {
       </div>
 
       <div class="example">
-        <h2>move.ease</h2>
+        <h3>move.ease</h3>
         <p>Easing function map, used by <code>Move#ease()</code> to
           allow for <code>move('foo').ease('in')</code> etc.</p>
         <pre class="source">
@@ -525,7 +534,7 @@ move.ease = {
       </div>
 
       <div class="example">
-        <h2>move.version</h2>
+        <h3>move.version</h3>
         <p>The library version in the form "MAJOR.MINOR.PATCH".</p>
         <pre class="source">
           <code>
