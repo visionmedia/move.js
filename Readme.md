@@ -12,11 +12,11 @@
 
  Move is packaged with a minified version, re-built each release. To do this yourself simply execute:
 
-   make move.min.js
+     $ make move.min.js
 
  We can also pass flags to uglifyjs:
  
-   make UGLIFY_FLAGS=--no-mangle
+     $ make UGLIFY_FLAGS=--no-mangle
 
 ## More Information
 
