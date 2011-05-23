@@ -6,7 +6,7 @@
 ## About
 
   Move.js is a small JavaScript library making CSS3 backed animation
-  extremely simple and elegant.
+  extremely simple and elegant. Be sure to view the `./examples`.
 
 ## Build
 
