@@ -319,7 +319,9 @@
    */
 
   Move.prototype.duration = function(n){
-    this._duration = n;
+    this._duration = 'string' == typeof n
+      ? parseFloat(n) * 1000
+      : n;
     return this.setVendorProperty('transition-duration', n);
   };
 

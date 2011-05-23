@@ -6,7 +6,29 @@
 ## About
 
   Move.js is a small JavaScript library making CSS3 backed animation
-  extremely simple and elegant. Be sure to view the `./examples`.
+  extremely simple and elegant. Be sure to view the `./examples`,
+  and view the [documentation](http://visionmedia.github.com/move.js/).
+
+## Example
+
+  For example below we translate to the point `(500px, 200px)`,
+  rotate by `180deg`, scale by `.5`, skew, and alter colors within a 2 second
+  duration. Once the animation is complete we `then()` fade out the element by setting the `opacity` to `0`, and shrink it with `scale(0.1)`.
+
+    move('.square')
+      .to(500, 200)
+      .rotate(180)
+      .scale(.5)
+      .set('background-color', '#888')
+      .set('border-color', 'black')
+      .duration('2s')
+      .skew(50, -10)
+      .then()
+        .set('opacity', 0)
+        .duration('0.3s')
+        .scale(0.1)
+        .pop()
+      .end();
 
 ## Build
 
