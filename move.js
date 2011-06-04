@@ -319,7 +319,7 @@
    */
 
   Move.prototype.duration = function(n){
-    this._duration = 'string' == typeof n
+    n = this._duration = 'string' == typeof n
       ? parseFloat(n) * 1000
       : n;
     return this.setVendorProperty('transition-duration', n + 'ms');
@@ -328,12 +328,15 @@
   /**
    * Delay the animation by `n`.
    *
-   * @param {Number|String} ms
+   * @param {Number|String} n
    * @return {Move} for chaining
    * @api public
    */
 
   Move.prototype.delay = function(n){
+    n = 'string' == typeof n
+      ? parseFloat(n) * 1000
+      : n;
     return this.setVendorProperty('transition-delay', n + 'ms');
   };
 
