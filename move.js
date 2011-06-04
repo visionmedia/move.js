@@ -463,7 +463,7 @@
 
     for (var prop in props) {
       if (props.hasOwnProperty(prop)) {
-        el.style.setProperty(prop, props[prop]);
+        el.style.setProperty(prop, props[prop], '');
       }
     }
 
