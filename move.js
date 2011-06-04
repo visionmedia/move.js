@@ -14,6 +14,30 @@
   var current = getComputedStyle || currentStyle;
 
   /**
+   * Map of prop -> type for numeric values.
+   */
+
+  var map = {
+      'top': 'px'
+    , 'bottom': 'px'
+    , 'left': 'px'
+    , 'right': 'px'
+    , 'width': 'px'
+    , 'height': 'px'
+    , 'font-size': 'px'
+    , 'margin': 'px'
+    , 'margin-top': 'px'
+    , 'margin-bottom': 'px'
+    , 'margin-left': 'px'
+    , 'margin-right': 'px'
+    , 'padding': 'px'
+    , 'padding-top': 'px'
+    , 'padding-bottom': 'px'
+    , 'padding-left': 'px'
+    , 'padding-right': 'px'
+  };
+
+  /**
    * Initialize a `Move` instance with the given `selector`.
    *
    * @param {String} selector
@@ -383,6 +407,7 @@
 
   Move.prototype.set = function(prop, val){
     this.transition(prop);
+    if ('number' == typeof val && map[prop]) val += map[prop]; 
     this._props[prop] = val;
     return this;
   };
@@ -401,7 +426,7 @@
     var self = this;
     return this.on('start', function(){
       var curr = parseInt(self.current(prop), 10);
-      self.set(prop, curr + val);
+      self.set(prop, curr + val + 'px');
     });
   };
 
@@ -419,7 +444,7 @@
     var self = this;
     return this.on('start', function(){
       var curr = parseInt(self.current(prop), 10);
-      self.set(prop, curr - val);
+      self.set(prop, curr - val + 'px');
     });
   };
 
