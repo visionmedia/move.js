@@ -322,7 +322,7 @@
     this._duration = 'string' == typeof n
       ? parseFloat(n) * 1000
       : n;
-    return this.setVendorProperty('transition-duration', n);
+    return this.setVendorProperty('transition-duration', n + 'ms');
   };
 
   /**
@@ -334,7 +334,7 @@
    */
 
   Move.prototype.delay = function(n){
-    return this.setVendorProperty('transition-delay', n);
+    return this.setVendorProperty('transition-delay', n + 'ms');
   };
 
   /**
