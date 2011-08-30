@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="ender.js"></script>
+    <script>
+      // in this directory 'ender build ../'
+      addEventListener('DOMContentLoaded', function(){
+        $('#square').move()
+          .to(500, 200)
+          .rotate(180)
+          .scale(.5)
+          .set('background-color', '#888')
+          .set('border-color', 'black')
+          .duration('2s')
+          .skew(50, -10)
+          .then()
+            .set('opacity', 0)
+            .duration('0.3s')
+            .scale(.1)
+            .pop()
+          .end();
+      }, false);
+    </script>
+
+    <style>
+      #square {
+        border: 1px solid #888;
+        width: 100px;
+        height: 100px;
+        background-color: white;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="square"></div>
+  </body>
+</html>

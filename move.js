@@ -5,7 +5,7 @@
  * MIT Licensed
  */
 
-;(function(exports){
+!function(context){
 
   /**
    * Computed style.
@@ -45,7 +45,7 @@
    * @api public
    */
 
-  exports.move = function(selector) {
+  move = function(selector) {
     return new Move(move.select(selector));
   };
 
@@ -53,7 +53,7 @@
    * Library version.
    */
 
-  exports.move.version = '0.0.3';
+  move.version = '0.0.3';
 
   /**
    * Defaults.
@@ -148,7 +148,7 @@
    * @api public
    */
 
-  exports.Move = function Move(el) {
+  Move = function Move(el) {
     if (!(this instanceof Move)) return new Move(el);
     EventEmitter.call(this);
     this.el = el;
@@ -589,5 +589,15 @@
 
     return this;
   };
+  
+  
+  
+  var oldMove = context.move;
+  move.noConflict = function() {
+    context.move = oldMove;
+    return this;
+  };
+  (typeof module !== 'undefined' && module.exports && (module.exports = move));
+  context['move'] = move;
 
-})(this);
+}(this);

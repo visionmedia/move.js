@@ -40,6 +40,35 @@
  
      $ make UGLIFY_FLAGS=--no-mangle
 
+## Ender Integratiion
+
+Got [Ender](http://ender.no.de)?
+
+    $ npm install ender -g
+
+Add move.js to your existing Ender build:
+
+    $ ender add movejs
+
+Then code...
+
+``` js
+$('.square').move()
+  .to(500, 200)
+  .rotate(180)
+  .scale(.5)
+  .set('background-color', '#888')
+  .set('border-color', 'black')
+  .duration('2s')
+  .skew(50, -10)
+  .then()
+    .set('opacity', 0)
+    .duration('0.3s')
+    .scale(0.1)
+    .pop()
+  .end();
+```
+
 ## More Information
 
   - [cubic-bezier()](http://www.roblaplaca.com/examples/bezierBuilder) generator

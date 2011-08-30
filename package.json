@@ -1,0 +1,17 @@
+{
+  "name": "movejs",
+  "description": "CSS3 JavaScript animation framework.",
+  "keywords": ["ender", "animation", "css3"],
+  "version": "0.0.3",
+  "homepage": "https://visionmedia.github.com/move.js",
+  "author": "TJ Holowaychuk <tj@vision-media.ca> (http://tjholowaychuk.com)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/visionmedia/move.js"
+  },
+  "dependencies": {
+    "qwery": ">= 2.1.2"
+  },
+  "main": "./move.js",
+  "ender": "./src/ender.js"
+}
