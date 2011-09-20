@@ -1,4 +1,3 @@
-
 /*!
  * move
  * Copyright(c) 2011 TJ Holowaychuk <tj@vision-media.ca>
@@ -155,6 +154,7 @@
     this._props = {};
     this._rotate = 0;
     this._transitionProps = [];
+    this._webkitTransforms = [];
     this._transforms = [];
     this.duration(move.defaults.duration)
   };
@@ -175,6 +175,7 @@
    */
 
   Move.prototype.transform = function(transform){
+    this._webkitTransforms.push(transform);
     this._transforms.push(transform);
     return this;
   };
@@ -230,10 +231,11 @@
 
   Move.prototype.translate = 
   Move.prototype.to = function(x, y){
-    y = y || 0;
-    return this.transform('translate('
-      + x + 'px, '
-      + y + 'px)');
+    x = this.el._translateX = (x == null ? this.el._translateX : x) || 0;
+    y = this.el._translateY = (y == null ? this.el._translateY : y) || 0;
+    this._webkitTransforms.push('translate3d('+x+'px, '+y+'px, 0)');
+    this._transforms.push('translate('+x+'px, '+y+'px)');
+    return this;
   };
 
   /**
@@ -246,7 +248,7 @@
 
   Move.prototype.translateX =
   Move.prototype.x = function(n){
-    return this.transform('translateX(' + n + 'px)');
+    return this.translate(n, null);
   };
 
   /**
@@ -259,7 +261,7 @@
 
   Move.prototype.translateY =
   Move.prototype.y = function(n){
-    return this.transform('translateY(' + n + 'px)');
+    return this.translate(null, n);
   };
 
   /**
@@ -273,10 +275,10 @@
    */
 
   Move.prototype.scale = function(x, y){
-    y = null == y ? x : y;
-    return this.transform('scale('
-      + x + ', '
-      + y + ')');
+    x = this.el._scaleX = (x == null ? this.el._scaleX : x) || 1;
+    y = this.el._scaleY = (y == null ? this.el._scaleY : y) || 1;
+    this._webkitTransforms.push('scale3d('+x+', '+y+', 0)');
+    this._transforms.push('scale('+x+', '+y+')');
   };
 
   /**
@@ -288,7 +290,7 @@
    */
 
   Move.prototype.scaleX = function(n){
-    return this.transform('scaleX(' + n + ')')
+    return this.scale(n, null);
   };
 
   /**
@@ -300,7 +302,7 @@
    */
 
   Move.prototype.scaleY = function(n){
-    return this.transform('scaleY(' + n + ')')
+    return this.scale(null, n);
   };
 
   /**
@@ -388,8 +390,10 @@
    * @api public
    */
 
-  Move.prototype.setVendorProperty = function(prop, val){
-    this.setProperty('-webkit-' + prop, val);
+  Move.prototype.setVendorProperty = function(prop, val, options){
+    if ((!options) || (!options.noWebkit)) {
+      this.setProperty('-webkit-' + prop, val);
+    }
     this.setProperty('-moz-' + prop, val);
     this.setProperty('-ms-' + prop, val);
     this.setProperty('-o-' + prop, val);
@@ -571,7 +575,12 @@
     this.emit('start');
 
     // transforms
-    if (this._transforms.length) {
+    if (this._webkitTransforms.length) {
+      this.setProperty('-webkit-transform', this._webkitTransforms.join(' '));
+      this.setVendorProperty('transform', this._transforms.join(' '), { noWebkit: true });
+    }
+
+    else if (this._transforms.length) {
       this.setVendorProperty('transform', this._transforms.join(' '));
     }
 
