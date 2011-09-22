@@ -230,10 +230,11 @@
    */
 
   Move.prototype.translate = 
-  Move.prototype.to = function(x, y){
+  Move.prototype.to = function(x, y, z){
     x = this.el._translateX = (x == null ? this.el._translateX : x) || 0;
     y = this.el._translateY = (y == null ? this.el._translateY : y) || 0;
-    this._webkitTransforms.push('translate3d('+x+'px, '+y+'px, 0)');
+    z = z || 0;
+    this._webkitTransforms.push('translate3d('+x+'px, '+y+'px, '+z+')');
     this._transforms.push('translate('+x+'px, '+y+'px)');
     return this;
   };
@@ -274,11 +275,13 @@
    * @api public
    */
 
-  Move.prototype.scale = function(x, y){
+  Move.prototype.scale = function(x, y, z){
     x = this.el._scaleX = (x == null ? this.el._scaleX : x) || 1;
-    y = this.el._scaleY = (y == null ? this.el._scaleY : y) || 1;
-    this._webkitTransforms.push('scale3d('+x+', '+y+', 0)');
+    y = y == null ? x : y;
+    z = z == null ? x : z;
+    this._webkitTransforms.push('scale3d('+x+', '+y+', '+z+')');
     this._transforms.push('scale('+x+', '+y+')');
+    return this;
   };
 
   /**
