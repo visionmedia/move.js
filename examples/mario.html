@@ -4,6 +4,10 @@
     <script src="../move.js"></script>
     <script>
       addEventListener('DOMContentLoaded', function(){
+            var ground = move('ground').animate('bgchange', {
+              duration: '4s',
+              'iteration-count': 'infinite'
+            }).end();
         addEventListener('keydown', function(e){
           var player = move('player')
             .duration(300)
@@ -49,6 +53,24 @@
         width: 20px;
         height: 90px;
         background: grey;
+      }
+      @-moz-keyframes bgchange {  
+        from {  
+          background: green;
+        }  
+          
+        to {  
+          background: black;
+        }  
+      }
+      @-webkit-keyframes bgchange {  
+        from {  
+          background: green;
+        }  
+          
+        to {  
+          background: black;
+        }  
       }
     </style>
   </head>
