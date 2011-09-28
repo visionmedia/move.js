@@ -576,7 +576,7 @@
     }
 
     // transition properties
-    this.setVendorProperty('transition-properties', this._transitionProps.join(', '));
+    this.setVendorProperty('transition-property', this._transitionProps.join(', '));
     this.applyProperties();
 
     // callback given
