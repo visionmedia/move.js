@@ -335,6 +335,28 @@
     return this.setVendorProperty('transition-timing-function', fn);
   };
 
+
+
+  /**
+   * Set animation properties
+   *
+   * @param {String} name
+   * @param {Object} props
+   * @return {Move} for chaining
+   * @api public
+   */
+
+  Move.prototype.animate = function(name, props){
+    if (typeof props !== 'undefined'){
+      for (var i in props){
+      	if (props.hasOwnProperty(i)){
+      		this.setVendorProperty('animation-'+i, props[i])
+      	}
+      }
+    }
+    return this.setVendorProperty('animation-name', name);
+  }
+
   /**
    * Set duration to `n`.
    *
@@ -576,7 +598,7 @@
     }
 
     // transition properties
-    this.setVendorProperty('transition-properties', this._transitionProps.join(', '));
+    this.setVendorProperty('transition-property', this._transitionProps.join(', '));
     this.applyProperties();
 
     // callback given
