@@ -335,8 +335,6 @@
     return this.setVendorProperty('transition-timing-function', fn);
   };
 
-
-
   /**
    * Set animation properties
    *
@@ -347,11 +345,9 @@
    */
 
   Move.prototype.animate = function(name, props){
-    if (typeof props !== 'undefined'){
-      for (var i in props){
-      	if (props.hasOwnProperty(i)){
-      		this.setVendorProperty('animation-'+i, props[i])
-      	}
+    for (var i in props){
+      if (props.hasOwnProperty(i)){
+        this.setVendorProperty('animation-' + i, props[i])
       }
     }
     return this.setVendorProperty('animation-name', name);

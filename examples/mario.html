@@ -4,10 +4,11 @@
     <script src="../move.js"></script>
     <script>
       addEventListener('DOMContentLoaded', function(){
-            var ground = move('ground').animate('bgchange', {
-              duration: '4s',
-              'iteration-count': 'infinite'
-            }).end();
+        var ground = move('ground').animate('bgchange', {
+          duration: '4s',
+          'iteration-count': 'infinite'
+        }).end();
+
         addEventListener('keydown', function(e){
           var player = move('player')
             .duration(300)
