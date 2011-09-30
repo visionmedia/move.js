@@ -148,7 +148,7 @@
    * @api public
    */
 
-  exports.Move = function Move(el) {
+  var Move = function(el) {
     if (!(this instanceof Move)) return new Move(el);
     EventEmitter.call(this);
     this.el = el;
@@ -158,6 +158,8 @@
     this._transforms = [];
     this.duration(move.defaults.duration)
   };
+
+  exports.Move = Move;
 
   /**
    * Inherit from `EventEmitter.prototype`.
