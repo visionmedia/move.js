@@ -69,13 +69,31 @@
   move.utils = {};
 
   /**
+   * Get stylesheet with title 'move' (creates it if doesn't exist).
+   *
+   * @return {Object}
+   * @api public
+   */
+
+  move.utils.__defineGetter__('sheet', function(){
+    if (!move.sheet){
+      sheet = document.createElement('style');
+      sheet.title = 'move';
+      sheet.type = 'text/css';
+      move.select('head').appendChild(sheet);
+      move.sheet = document.styleSheets[document.styleSheets.length-1];
+    }
+    return move.sheet;
+  });
+
+  /**
    * Get browser supported property given a CSS `prop`.
    *
    * @param {String} prop
    * @return {String}
    * @api public
    */
-
+  
   move.utils.getSupportedProperty = function(prop){
     var vendorProp, bodyStyle = document.body.style, capProp = prop.charAt(0).toUpperCase().replace(/-(\w)/g,RegExp.$1.toUpperCase()) + prop.slice(1), prefixes = [ "Moz", "Webkit", "O", "ms" ];
     if (prop in bodyStyle) {
@@ -88,6 +106,19 @@
         }
       }
     }
+  };
+
+  /**
+   * Get browser prefix given a CSS `prop`.
+   *
+   * @param {String} prop
+   * @return {String}
+   * @api public
+   */
+
+  move.utils.getPrefix = function(prop) {
+    var prefix = move.utils.getSupportedProperty(prop).match(/-\w+-/);
+    return prefix?prefix[0]:'';
   };
 
   /**
@@ -180,6 +211,7 @@
     this._rotate = 0;
     this._transitionProps = [];
     this._transforms = [];
+    this._animations = [];
     this.duration(move.defaults.duration)
   };
 
@@ -364,17 +396,33 @@
    *
    * @param {String} name
    * @param {Object} props
+   * @param {Object|String} props
    * @return {Move} for chaining
    * @api public
    */
 
-  Move.prototype.animate = function(name, keyframe, props){
-    for (var i in props){
-      if (props.hasOwnProperty(i)){
-        this.setProperty('animation-' + i, props[i])
+  Move.prototype.animate = function(keyframe, props, name){
+    name = name || 'move-animation-'+(+this._animations.length+1);
+    var keyframeStr = '@' + move.utils.getPrefix('animation') + 'keyframes ' + name + '  {';
+    for (var i in keyframe){
+      var percentage = keyframe[i];
+      keyframeStr += i;
+      if (i.indexOf('%') === -1 && i !== 'from' && i !== 'to'){
+        keyframeStr += '%';
       }
+      keyframeStr += ' { ';
+      for(var j in percentage){
+        keyframeStr += move.utils.getSupportedProperty(j) + ':' + percentage[j] + '; ';
+      }
+      keyframeStr += ' }';
     }
-    return this.setProperty('animation-name', name);
+    keyframeStr += '}';
+    move.utils.sheet.insertRule(keyframeStr, move.utils.sheet.cssRules.length);
+    if (typeof props === 'object'){
+      props = (props.duration || '') + ' ' + (props['timing-function'] || '') + ' ' + (props.delay || '') + ' ' + (props['iteration-count'] || '') + ' ' + (props.direction || '');
+    }
+    this._animations.push(name + ' ' + props);
+    return this;
   }
 
   /**
@@ -613,6 +661,9 @@
     if (this._transforms.length) {
       this.setProperty('transform', this._transforms.join(' '));
     }
+    if (this._animations.length) {
+      this.setProperty('animation', this._animations.join(', '));
+    }
     // transition properties
     this.setProperty('transition-property', this._transitionProps.join(', ') + ', ' + move.utils.getSupportedProperty('transform'));
     this.applyProperties();
@@ -623,6 +674,7 @@
     // emit "end" when complete
     setTimeout(function(){
       self.setProperty('transform', null);
+      self.setProperty('animation', null);
       self.setProperty('transition-property', null);
       self.emit('end');
     }, this._duration);

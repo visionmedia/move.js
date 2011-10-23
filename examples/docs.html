@@ -149,7 +149,56 @@
                 .pop()
             .end();
         });
+        play(14, function(){
+          move('#example-14 .box')
+          .animate({
+            0: {
+              transform: 'skew(50)'
+            },
+            10: {
+              'margin-left': '200px',
+              transform: 'rotate(90deg)',
+              'border-radius': '20px'
+            },
+            30: {
+              'margin-left': '20px',
+              transform: 'rotate(90deg)'
+            },
+            80: {
+              transform: 'rotate(90deg)',
+              'border-radius': '10px'
+            },
+            90: {
+              'margin-left': '60px',
+              transform: 'rotate(25deg)',
+              'border-radius': '5px'
+            },
+            100: {
+              'margin-left': '0px',
+              transform: 'rotate(25deg)',
+              'border-radius': '5px'
+            }
+          }, {
+            duration: '3s',
+            'iteration-count': 3
+          })
+          .animate({
+            '0%': {
+              height: '50px',
+              background: 'green'
+            },
+            '50%': {
+              height: '30px',
+              background: 'black'
+            },
+            '100%': {
+              height: '50px',
+              background: 'white'
+            }
+          }, '4s 1').end();
+        });
       }, false);
+
     </script>
 
     <style>
@@ -488,6 +537,65 @@ move('#example-13 .box2')
         .pop()
       .pop()
   .end();
+          </code>
+        </pre>
+      </div>
+
+      <div id="example-14" class="example">
+        <h3>Move#animate(keyframe, props, name)</h3>
+        <p>Apply a CSS3 animation to the element. Define a <em>keyframe</em> in JSON format and set <em>props</em> which is a string like '4s infinite' or a JSON object specifying CSS3 animation properties. Optionally set a <em>name</em> which defaults to 'move-animation-(animation-number)'</p>
+        <a href="#" class="play">Play</a>
+        <div class="sandbox">
+          <div class="box small"></div>
+        </div>
+        <pre class="source">
+          <code>
+move('#example-14 .box')
+          .animate({
+            0: {
+              transform: 'skew(50)'
+            },
+            10: {
+              'margin-left': '200px',
+              transform: 'rotate(90deg)',
+              'border-radius': '20px'
+            },
+            30: {
+              'margin-left': '20px',
+              transform: 'rotate(90deg)'
+            },
+            80: {
+              transform: 'rotate(90deg)',
+              'border-radius': '10px'
+            },
+            90: {
+              'margin-left': '60px',
+              transform: 'rotate(25deg)',
+              'border-radius': '5px'
+            },
+            100: {
+              'margin-left': '0px',
+              transform: 'rotate(25deg)',
+              'border-radius': '5px'
+            }
+          }, {
+            duration: '3s',
+            'iteration-count': 3
+          })
+          .animate({
+            '0%': {
+              height: '50px',
+              background: 'green'
+            },
+            '50%': {
+              height: '30px',
+              background: 'black'
+            },
+            '100%': {
+              height: '50px',
+              background: 'white'
+            }
+          }, '4s 1').end();
           </code>
         </pre>
       </div>
