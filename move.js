@@ -66,6 +66,30 @@
     duration: 500
   };
 
+  move.utils = {};
+
+  /**
+   * Get browser supported property given a CSS `prop`.
+   *
+   * @param {String} prop
+   * @return {String}
+   * @api public
+   */
+
+  move.utils.getSupportedProperty = function(prop){
+    var vendorProp, bodyStyle = document.body.style, capProp = prop.charAt(0).toUpperCase().replace(/-(\w)/g,RegExp.$1.toUpperCase()) + prop.slice(1), prefixes = [ "Moz", "Webkit", "O", "ms" ];
+    if (prop in bodyStyle) {
+      return prop;
+    }else{
+      for (var i = prefixes.length - 1; i >= 0; i--) {
+        vendorProp = prefixes[i] + capProp;
+        if (vendorProp in bodyStyle){
+          return '-' + prefixes[i].toLowerCase() + '-' + prop;    
+        }
+      }
+    }
+  };
+
   /**
    * Easing functions.
    */
@@ -332,10 +356,8 @@
 
   Move.prototype.ease = function(fn){
     fn = move.ease[fn] || fn || 'ease';
-    return this.setVendorProperty('transition-timing-function', fn);
+    return this.setProperty('transition-timing-function', fn);
   };
-
-
 
   /**
    * Set animation properties
@@ -346,15 +368,13 @@
    * @api public
    */
 
-  Move.prototype.animate = function(name, props){
-    if (typeof props !== 'undefined'){
-      for (var i in props){
-      	if (props.hasOwnProperty(i)){
-      		this.setVendorProperty('animation-'+i, props[i])
-      	}
+  Move.prototype.animate = function(name, keyframe, props){
+    for (var i in props){
+      if (props.hasOwnProperty(i)){
+        this.setProperty('animation-' + i, props[i])
       }
     }
-    return this.setVendorProperty('animation-name', name);
+    return this.setProperty('animation-name', name);
   }
 
   /**
@@ -369,7 +389,7 @@
     n = this._duration = 'string' == typeof n
       ? parseFloat(n) * 1000
       : n;
-    return this.setVendorProperty('transition-duration', n + 'ms');
+    return this.setProperty('transition-duration', n + 'ms');
   };
 
   /**
@@ -384,7 +404,7 @@
     n = 'string' == typeof n
       ? parseFloat(n) * 1000
       : n;
-    return this.setVendorProperty('transition-delay', n + 'ms');
+    return this.setProperty('transition-delay', n + 'ms');
   };
 
   /**
@@ -401,23 +421,7 @@
     return this;
   };
 
-  /**
-   * Set a vendor prefixed `prop` with the given `val`.
-   *
-   * @param {String} prop
-   * @param {String} val
-   * @return {Move} for chaining
-   * @api public
-   */
-
-  Move.prototype.setVendorProperty = function(prop, val){
-    this.setProperty('-webkit-' + prop, val);
-    this.setProperty('-moz-' + prop, val);
-    this.setProperty('-ms-' + prop, val);
-    this.setProperty('-o-' + prop, val);
-    return this;
-  };
-
+  
   /**
    * Set `prop` to `value`, deferred until `.end()` is invoked
    * and adds the property to the list of transition props.
@@ -497,6 +501,22 @@
     return this;
   };
 
+
+/**
+   * Apply a CSS `prop` with the given `val`.
+   *
+   * @param {String} prop
+   * @param {String} val
+   * @return {Move} for chaining
+   * @api public
+   */
+
+  Move.prototype.applyProperty = function(prop, val){
+    this.el.style.setProperty(move.utils.getSupportedProperty(prop), val, '');
+    return this;
+  };
+
+
   /**
    * Commit style properties, aka apply them to `el.style`.
    *
@@ -506,15 +526,12 @@
    */
 
   Move.prototype.applyProperties = function(){
-    var props = this._props
-      , el = this.el;
-
+    var props = this._props;
     for (var prop in props) {
       if (props.hasOwnProperty(prop)) {
-        el.style.setProperty(prop, props[prop], '');
+        this.applyProperty(prop, props[prop]);
       }
     }
-
     return this;
   };
 
@@ -594,11 +611,10 @@
 
     // transforms
     if (this._transforms.length) {
-      this.setVendorProperty('transform', this._transforms.join(' '));
+      this.setProperty('transform', this._transforms.join(' '));
     }
-
     // transition properties
-    this.setVendorProperty('transition-property', this._transitionProps.join(', '));
+    this.setProperty('transition-property', this._transitionProps.join(', ') + ', ' + move.utils.getSupportedProperty('transform'));
     this.applyProperties();
 
     // callback given
@@ -606,6 +622,8 @@
 
     // emit "end" when complete
     setTimeout(function(){
+      self.setProperty('transform', null);
+      self.setProperty('transition-property', null);
       self.emit('end');
     }, this._duration);
 
