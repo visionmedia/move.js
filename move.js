@@ -153,6 +153,7 @@
     EventEmitter.call(this);
     this.el = el;
     this._props = {};
+    this._clearProps = {};
     this._rotate = 0;
     this._transitionProps = [];
     this._transforms = [];
@@ -380,6 +381,19 @@
   };
 
   /**
+   * Clear `prop`, deferred until `.end()` is invoked.
+   *
+   * @param {String} prop
+   * @return {Move} for chaining
+   * @api public
+   */
+
+  Move.prototype.clearProperty = function(prop){
+    this._clearProps[prop] = true;
+    return this;
+  };
+
+  /**
    * Set a vendor prefixed `prop` with the given `val`.
    *
    * @param {String} prop
@@ -393,6 +407,23 @@
     this.setProperty('-moz-' + prop, val);
     this.setProperty('-ms-' + prop, val);
     this.setProperty('-o-' + prop, val);
+    return this;
+  };
+
+  /**
+   * Clear a vendor prefixed `prop` with the given `val`.
+   *
+   * @param {String} prop
+   * @param {String} val
+   * @return {Move} for chaining
+   * @api public
+   */
+
+  Move.prototype.clearVendorProperty = function(prop, val){
+    this.clearProperty('-webkit-' + prop, val);
+    this.clearProperty('-moz-' + prop, val);
+    this.clearProperty('-ms-' + prop, val);
+    this.clearProperty('-o-' + prop, val);
     return this;
   };
 
@@ -485,11 +516,18 @@
 
   Move.prototype.applyProperties = function(){
     var props = this._props
-      , el = this.el;
+      , el = this.el
+	  , clearProps = this._clearProps;
 
     for (var prop in props) {
       if (props.hasOwnProperty(prop)) {
         el.style.setProperty(prop, props[prop], '');
+      }
+    }
+
+    for (var clearProp in clearProps) {
+      if (clearProps.hasOwnProperty(clearProp)) {
+          el.style.removeProperty(clearProp);
       }
     }
 
