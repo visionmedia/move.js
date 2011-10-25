@@ -604,6 +604,8 @@
     setTimeout(function(){
       self.setVendorProperty('transform', null);
       self.setVendorProperty('transition-property', null);
+	  self.setVendorProperty('transition-duration', null);
+	  self.applyProperties();
       self.emit('end');
     }, this._duration);
 
