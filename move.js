@@ -11,7 +11,7 @@
    * Computed style.
    */
 
-  var current = getComputedStyle || currentStyle;
+  var current = window.getComputedStyle || window.currentStyle;
 
   /**
    * Map of prop -> type for numeric values.
@@ -467,6 +467,7 @@
    */
 
   Move.prototype.add = function(prop, val){
+    if (!current) { return; }
     var self = this;
     return this.on('start', function(){
       var curr = parseInt(self.current(prop), 10);
@@ -485,6 +486,7 @@
    */
 
   Move.prototype.sub = function(prop, val){
+    if (!current) { return; }
     var self = this;
     return this.on('start', function(){
       var curr = parseInt(self.current(prop), 10);
