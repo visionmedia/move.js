@@ -1,4 +1,15 @@
 
+0.1.0 / 2011-11-16 
+==================
+
+  * Added more cubic-bezier ease functions [onirame]
+
+0.0.4 / 2011-10-25 
+==================
+
+  * Remove resets in duration timeout causing undesired behaviour
+  * Changed CSS property transition-properties to transition-property
+
 0.0.3 / 2011-08-27 
 ==================
 
