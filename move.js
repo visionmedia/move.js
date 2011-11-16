@@ -11,13 +11,7 @@
    * Computed style.
    */
 
-  var current = null;
-  if (typeof getComputedStyle != 'undefined') {
-    current = getComputedStyle;
-  }
-  else if (typeof currentStyle != 'undefined') {
-    current = currentStyle;
-  }
+  var current = window.getComputedStyle || window.currentStyle;
 
   /**
    * Map of prop -> type for numeric values.
