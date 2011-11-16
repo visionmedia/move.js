@@ -467,7 +467,7 @@
    */
 
   Move.prototype.add = function(prop, val){
-    if (!current) { return; }
+    if (!current) return;
     var self = this;
     return this.on('start', function(){
       var curr = parseInt(self.current(prop), 10);
@@ -486,7 +486,7 @@
    */
 
   Move.prototype.sub = function(prop, val){
-    if (!current) { return; }
+    if (!current) return;
     var self = this;
     return this.on('start', function(){
       var curr = parseInt(self.current(prop), 10);
