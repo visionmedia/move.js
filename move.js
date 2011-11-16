@@ -12,10 +12,10 @@
    */
 
   var current = null;
-  if (typeof window.getComputedStyle != 'undefined') {
+  if (typeof getComputedStyle != 'undefined') {
     current = getComputedStyle;
   }
-  else if (typeof window.currentStyle != 'undefined') {
+  else if (typeof currentStyle != 'undefined') {
     current = currentStyle;
   }
 
