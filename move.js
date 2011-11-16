@@ -412,7 +412,7 @@
    */
 
   Move.prototype.setVendorProperty = function(prop, val, options){
-    if ((!options) || (!options.noWebkit)) {
+    if (!options.noWebkit) {
       this.setProperty('-webkit-' + prop, val);
     }
     this.setProperty('-moz-' + prop, val);
