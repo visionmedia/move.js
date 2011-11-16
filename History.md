@@ -1,4 +1,9 @@
 
+0.1.0 / 2011-11-16 
+==================
+
+  * Added more cubic-bezier ease functions [onirame]
+
 0.0.4 / 2011-10-25 
 ==================
 
