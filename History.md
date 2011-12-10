@@ -1,4 +1,9 @@
 
+0.1.1 / 2011-12-10 
+==================
+
+  * Revert "Changed CSS property transition-properties to transition-property"
+
 0.1.0 / 2011-11-16 
 ==================
 
