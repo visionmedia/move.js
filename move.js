@@ -102,6 +102,8 @@
     , 'ease-in-out-back':  'cubic-bezier(0.680, -0.550, 0.265, 1.550)'
   };
 
+  var elementTypes = [1,9,11];
+
   /**
    * Default element selection utilized by `move(selector)`.
    *
@@ -116,9 +118,10 @@
    * @return {Element}
    * @api public
    */
-
   move.select = function(selector){
-    if ('string' != typeof selector) return selector;
+    if ('string' != typeof selector)
+      if (elementTypes.indexOf(selector.nodeType) >= 0)
+        return selector;
     return document.getElementById(selector)
       || document.querySelectorAll(selector)[0];
   };
