@@ -541,6 +541,7 @@ Move.select = function(selector){
 function Move(el) {
   if (!(this instanceof Move)) return new Move(el);
   if ('string' == typeof el) el = query(el);
+  if (!el) throw new TypeError('Move must be initialized with element or selector');
   this.el = el;
   this._props = {};
   this._rotate = 0;
