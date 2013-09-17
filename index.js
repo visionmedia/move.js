@@ -3,9 +3,18 @@
  * Module Dependencies.
  */
 
+var has3d = require('has-translate3d');
 var Emitter = require('emitter');
 var query = require('query');
 var css = require('css');
+
+/**
+ * CSS Translate
+ */
+
+var translate = has3d
+  ? ['translate3d(', ', 0)']
+  : ['translate(', ')'];
 
 /**
  * Export `Move`
@@ -184,9 +193,8 @@ Move.prototype.skewY = function(n){
 Move.prototype.translate =
 Move.prototype.to = function(x, y){
   y = y || 0;
-  return this.transform('translate('
-    + x + 'px, '
-    + y + 'px)');
+  return this.transform(translate
+    .join(x + 'px, ' + y + 'px'));
 };
 
 /**

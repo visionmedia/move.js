@@ -6,6 +6,7 @@
   "keywords": ["animation", "css3"],
   "scripts": ["index.js"],
   "dependencies": {
+    "component/has-translate3d": "*",
     "component/emitter": "*",
     "component/query": "*",
     "component/css": "*"

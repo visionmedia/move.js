@@ -200,6 +200,51 @@ require.relative = function(parent) {
 
   return localRequire;
 };
+require.register("component-transform-property/index.js", function(exports, require, module){
+
+var styles = [
+  'webkitTransform',
+  'MozTransform',
+  'msTransform',
+  'OTransform',
+  'transform'
+];
+
+var el = document.createElement('p');
+var style;
+
+for (var i = 0; i < styles.length; i++) {
+  style = styles[i];
+  if (null != el.style[style]) {
+    module.exports = style;
+    break;
+  }
+}
+
+});
+require.register("component-has-translate3d/index.js", function(exports, require, module){
+
+var prop = require('transform-property');
+// IE8<= doesn't have `getComputedStyle`
+if (!prop || !window.getComputedStyle) return module.exports = false;
+
+var map = {
+  webkitTransform: '-webkit-transform',
+  OTransform: '-o-transform',
+  msTransform: '-ms-transform',
+  MozTransform: '-moz-transform',
+  transform: 'transform'
+};
+
+// from: https://gist.github.com/lorenzopolidori/3794226
+var el = document.createElement('div');
+el.style[prop] = 'translate3d(1px,1px,1px)';
+document.body.insertBefore(el, null);
+var val = getComputedStyle(el).getPropertyValue(map[prop]);
+document.body.removeChild(el);
+module.exports = null != val && val.length && 'none' != val;
+
+});
 require.register("component-indexof/index.js", function(exports, require, module){
 module.exports = function(arr, obj){
   if (arr.indexOf) return arr.indexOf(obj);
@@ -441,9 +486,18 @@ require.register("move/index.js", function(exports, require, module){
  * Module Dependencies.
  */
 
+var has3d = require('has-translate3d');
 var Emitter = require('emitter');
 var query = require('query');
 var css = require('css');
+
+/**
+ * CSS Translate
+ */
+
+var translate = has3d
+  ? ['translate3d(', ', 0)']
+  : ['translate(', ')'];
 
 /**
  * Export `Move`
@@ -622,9 +676,8 @@ Move.prototype.skewY = function(n){
 Move.prototype.translate =
 Move.prototype.to = function(x, y){
   y = y || 0;
-  return this.transform('translate('
-    + x + 'px, '
-    + y + 'px)');
+  return this.transform(translate
+    .join(x + 'px, ' + y + 'px'));
 };
 
 /**
@@ -995,6 +1048,11 @@ Move.prototype.end = function(fn){
 });
 
 
+
+
+require.alias("component-has-translate3d/index.js", "move/deps/has-translate3d/index.js");
+require.alias("component-has-translate3d/index.js", "has-translate3d/index.js");
+require.alias("component-transform-property/index.js", "component-has-translate3d/deps/transform-property/index.js");
 
 require.alias("component-emitter/index.js", "move/deps/emitter/index.js");
 require.alias("component-emitter/index.js", "emitter/index.js");
