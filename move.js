@@ -1038,9 +1038,13 @@ Move.prototype.end = function(fn){
   if (fn) this.then(fn);
 
   // emit "end" when complete
-  setTimeout(function(){
+  var end = function() {
     self.emit('end');
-  }, this._duration);
+  };
+
+  this.el.addEventListener('transitionend',       end, false);
+  this.el.addEventListener('webkitTransitionEnd', end, false);
+  this.el.addEventListener('oTransitionEnd',      end, false);
 
   return this;
 };
