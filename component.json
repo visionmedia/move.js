@@ -1,0 +1,7 @@
+{
+  "name": "move-site",
+  "styles": ["style.css"],
+  "dependencies": {
+    "visionmedia/move.js": "*"
+  }
+}
