@@ -9,6 +9,17 @@
   extremely simple and elegant. Be sure to view the `./examples`,
   and view the [documentation](http://visionmedia.github.com/move.js/).
 
+## Installation
+
+  With [component(1)](http://component.io):
+
+    $ component install visionmedia/move.js
+
+  With a stand-alone build
+
+    <script src='move.min.js'></script>
+
+
 ## Example
 
   For example below we translate to the point `(500px, 200px)`,
@@ -73,14 +84,14 @@
      $ make move.min.js
 
  We can also pass flags to uglifyjs:
- 
+
      $ make UGLIFY_FLAGS=--no-mangle
 
 ## More Information
 
   - [cubic-bezier()](http://www.roblaplaca.com/examples/bezierBuilder) generator
 
-## License 
+## License
 
 (The MIT License)
 
