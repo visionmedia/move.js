@@ -1,4 +1,11 @@
 
+0.2.1 / 2013-09-26
+==================
+
+ * update examples and docs
+ * fixed typo in Move.prototype.ease function [olegomon]
+ * use translate3d() when available
+
 0.2.0 / 2013-09-16
 ==================
 

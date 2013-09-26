@@ -33,7 +33,7 @@ var style = window.getComputedStyle
  * Library version.
  */
 
-Move.version = '0.0.3';
+Move.version = '0.2.1';
 
 /**
  * Defaults.
