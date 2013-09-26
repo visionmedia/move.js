@@ -962,7 +962,7 @@ Move.prototype.applyProperties = function(){
 
 Move.prototype.move =
 Move.prototype.select = function(selector){
-  this.el = move.select(selector);
+  this.el = Move.select(selector);
   return this;
 };
 
