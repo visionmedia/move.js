@@ -1,43 +1,6 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="../move.js"></script>
-    <script>
-      addEventListener('DOMContentLoaded', function(){
-        var ground = move('ground').animate('bgchange', {
-          duration: '4s',
-          'iteration-count': 'infinite'
-        }).end();
-
-        addEventListener('keydown', function(e){
-          var player = move('player')
-            .duration(300)
-            .ease('out');
-
-          switch (e.keyCode) {
-            // up
-            case 38:
-              player
-                .add('bottom', 100)
-                .duration(200)
-                .then()
-                  .sub('bottom', 100)
-                  .pop()
-                .end();
-              break;
-            // left
-            case 37:
-              player.sub('left', 100).end();
-              break;
-            // right
-            case 39:
-              player.add('left', 100).end();
-              break;
-          }
-        }, false);
-      }, false);
-    </script>
-
     <style>
       #ground {
         position: fixed;
@@ -55,23 +18,23 @@
         height: 90px;
         background: grey;
       }
-      @-moz-keyframes bgchange {  
-        from {  
+      @-moz-keyframes bgchange {
+        from {
           background: green;
-        }  
-          
-        to {  
+        }
+
+        to {
           background: black;
-        }  
+        }
       }
-      @-webkit-keyframes bgchange {  
-        from {  
+      @-webkit-keyframes bgchange {
+        from {
           background: green;
-        }  
-          
-        to {  
+        }
+
+        to {
           background: black;
-        }  
+        }
       }
     </style>
   </head>
@@ -79,5 +42,39 @@
   <body>
     <div id="player"></div>
     <div id="ground"></div>
+    <script src="../move.js"></script>
+    <script>
+      var ground = move('#ground').animate('bgchange', {
+        duration: '4s',
+        'iteration-count': 'infinite'
+      }).end();
+
+      addEventListener('keydown', function(e){
+        var player = move('#player')
+          .duration(300)
+          .ease('out');
+
+        switch (e.keyCode) {
+          // up
+          case 38:
+            player
+              .add('bottom', 100)
+              .duration(200)
+              .then()
+                .sub('bottom', 100)
+                .pop()
+              .end();
+            break;
+          // left
+          case 37:
+            player.sub('left', 100).end();
+            break;
+          // right
+          case 39:
+            player.add('left', 100).end();
+            break;
+        }
+      }, false);
+    </script>
   </body>
 </html>

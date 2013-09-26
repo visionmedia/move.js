@@ -1,26 +1,6 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="../move.js"></script>
-    <script>
-      addEventListener('DOMContentLoaded', function(){
-        move('square')
-          .x(500)
-          .y(200)
-          .ease('in-out')
-          .then()
-            .x(-500)
-            .then()
-              .y(-200)
-              .duration('2s')
-              .delay('.5s')
-              .rotate(180)
-              .pop()
-            .pop()
-          .end();
-      }, false);
-    </script>
-
     <style>
       #square {
         border: 1px solid #888;
@@ -33,5 +13,22 @@
 
   <body>
     <div id="square"></div>
+    <script src="../move.js"></script>
+    <script>
+      move('#square')
+        .x(500)
+        .y(200)
+        .ease('in-out')
+        .then()
+          .x(-500)
+          .then()
+            .y(-200)
+            .duration('2s')
+            .delay('.5s')
+            .rotate(180)
+            .pop()
+          .pop()
+        .end();
+    </script>
   </body>
 </html>

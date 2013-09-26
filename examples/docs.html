@@ -2,156 +2,6 @@
 <html>
   <head>
     <title>Move.js - CSS3 animation framework for JavaScript</title>
-    <script src="../move.js"></script>
-    <script>
-
-      function $(selector) {
-        return document.querySelectorAll(selector)[0];
-      }
-
-      function play(example, fn) {
-        $('#example-' + example + ' .play').addEventListener('click', function(e){
-          e.preventDefault();
-          fn();
-        }, false);
-      }
-
-      addEventListener('DOMContentLoaded', function(){
-        // example 1
-        play(1, function(){
-          move('#example-1 .box')
-            .set('margin-left', 200)
-            .end();
-        });
-
-        // example 2
-        play(2, function(){
-          move('#example-2 .box')
-            .add('margin-left', 200)
-            .end();
-        });
-
-        // example 3
-        play(3, function(){
-          move('#example-3 .box')
-            .sub('margin-left', 100)
-            .end();
-        });
-
-        // example 4
-        var e4 = move('#example-4 .box');
-        play(4, function(){
-          e4.rotate(140).end();
-        });
-
-        // example 5
-        play(5, function(){
-          move('#example-5 .box')
-            .set('background-color', 'blue')
-            .duration(2000)
-            .end();
-        });
-
-        // example 6
-        play(6, function(){
-          move('#example-6 .box')
-            .translate(300, 80)
-            .end();
-        });
-
-        // example 7
-        play(7, function(){
-          move('#example-7 .box')
-            .x(300)
-            .y(20)
-            .end();
-        });
-
-        // example 8
-        play(8, function(){
-          move('#example-8 .box')
-            .x(300)
-            .skew(50)
-            .set('height', 20)
-            .end();
-        });
-
-        // example 9
-        play(9, function(){
-          move('#example-9 .box')
-            .scale(3)
-            .end();
-        });
-
-        // example 10
-        play(10, function(){
-          move('#example-10 .box1').x(400).end();
-          move('#example-10 .box2').ease('in').x(400).end();
-          move('#example-10 .box3').ease('out').x(400).end();
-          move('#example-10 .box4').ease('in-out').x(400).end();
-          move('#example-10 .box5').ease('snap').x(400).end();
-          move('#example-10 .box6').ease('cubic-bezier(0,1,1,0)').x(400).end();
-
-          setTimeout(function(){
-            move('#example-10 .box1').x(0).end();
-            move('#example-10 .box2').x(0).end();
-            move('#example-10 .box3').x(0).end();
-            move('#example-10 .box4').x(0).end();
-            move('#example-10 .box5').x(0).end();
-            move('#example-10 .box6').x(0).end();
-          }, 1200);
-        });
-
-        play(11, function(){
-          move('#example-11 .box')
-            .set('background-color', 'red')
-            .duration(1000)
-            .end(function(){
-              move('#example-11 .box')
-                .set('background-color', 'white')
-                .end();
-            });
-        });
-
-        // example 12
-        play(12, function(){
-          move('#example-12 .box')
-            .set('background-color', 'blue')
-            .delay('2s')
-            .end();
-        });
-
-        // example 13
-        play(13, function(){
-          var moveBack = move('#example-13 .box')
-            .set('background-color', 'white')
-            .x(0);
-
-          move('#example-13 .box')
-            .set('background-color', 'red')
-            .x(500)
-            .then(moveBack)
-            .end();
-
-          move('#example-13 .box2')
-            .set('background-color', 'red')
-            .x(500)
-            .scale(.5)
-            .rotate(60)
-              .then()
-                .rotate(30)
-                .scale(1.5)
-                .set('border-radius', 5)
-                .set('background-color', 'white')
-                .then()
-                  .set('opacity', 0)
-                  .pop()
-                .pop()
-            .end();
-        });
-      }, false);
-    </script>
-
     <style>
       body {
         padding: 50px;
@@ -224,7 +74,7 @@
 
     <h2>Examples</h2>
 
-    <a href="http://github.com/visionmedia/move.js"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://d3nwyuy0nl342s.cloudfront.net/img/7afbc8b248c68eb468279e8c17986ad46549fb71/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub"></a>
+    <a href="https://github.com/visionmedia/move.js"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
 
     <div id="examples">
       <div id="example-1" class="example">
@@ -295,7 +145,7 @@ move('#example-4 .box')
 
       <div id="example-5" class="example">
         <h3>Move#duration(n)</h3>
-        <p>Set animation duration to <em>n</em> which is a 
+        <p>Set animation duration to <em>n</em> which is a
           Number or a string such as "4s".</p>
         <a href="#" class="play">Play</a>
         <div class="sandbox">
@@ -435,7 +285,7 @@ move('#example-11 .box')
 
       <div id="example-12" class="example">
         <h3>Move#delay(n)</h3>
-        <p>Set animation delay to <em>n</em> which is a 
+        <p>Set animation delay to <em>n</em> which is a
           Number or a string such as "4s".</p>
         <a href="#" class="play">Play</a>
         <div class="sandbox">
@@ -544,6 +394,153 @@ move.version = "n.n.n";
         </pre>
       </div>
 
+    <script src="../move.js"></script>
+    <script>
+
+      function $(selector) {
+        return document.querySelectorAll(selector)[0];
+      }
+
+      function play(example, fn) {
+        $('#example-' + example + ' .play').addEventListener('click', function(e){
+          e.preventDefault();
+          fn();
+        }, false);
+      }
+
+      // example 1
+      play(1, function(){
+        move('#example-1 .box')
+          .set('margin-left', 200)
+          .end();
+      });
+
+      // example 2
+      play(2, function(){
+        move('#example-2 .box')
+          .add('margin-left', 200)
+          .end();
+      });
+
+      // example 3
+      play(3, function(){
+        move('#example-3 .box')
+          .sub('margin-left', 100)
+          .end();
+      });
+
+      // example 4
+      var e4 = move('#example-4 .box');
+      play(4, function(){
+        e4.rotate(140).end();
+      });
+
+      // example 5
+      play(5, function(){
+        move('#example-5 .box')
+          .set('background-color', 'blue')
+          .duration(2000)
+          .end();
+      });
+
+      // example 6
+      play(6, function(){
+        move('#example-6 .box')
+          .translate(300, 80)
+          .end();
+      });
+
+      // example 7
+      play(7, function(){
+        move('#example-7 .box')
+          .x(300)
+          .y(20)
+          .end();
+      });
+
+      // example 8
+      play(8, function(){
+        move('#example-8 .box')
+          .x(300)
+          .skew(50)
+          .set('height', 20)
+          .end();
+      });
+
+      // example 9
+      play(9, function(){
+        move('#example-9 .box')
+          .scale(3)
+          .end();
+      });
+
+      // example 10
+      play(10, function(){
+        move('#example-10 .box1').x(400).end();
+        move('#example-10 .box2').ease('in').x(400).end();
+        move('#example-10 .box3').ease('out').x(400).end();
+        move('#example-10 .box4').ease('in-out').x(400).end();
+        move('#example-10 .box5').ease('snap').x(400).end();
+        move('#example-10 .box6').ease('cubic-bezier(0,1,1,0)').x(400).end();
+
+        setTimeout(function(){
+          move('#example-10 .box1').x(0).end();
+          move('#example-10 .box2').x(0).end();
+          move('#example-10 .box3').x(0).end();
+          move('#example-10 .box4').x(0).end();
+          move('#example-10 .box5').x(0).end();
+          move('#example-10 .box6').x(0).end();
+        }, 1200);
+      });
+
+      play(11, function(){
+        move('#example-11 .box')
+          .set('background-color', 'red')
+          .duration(1000)
+          .end(function(){
+            move('#example-11 .box')
+              .set('background-color', 'white')
+              .end();
+          });
+      });
+
+      // example 12
+      play(12, function(){
+        move('#example-12 .box')
+          .set('background-color', 'blue')
+          .delay('2s')
+          .end();
+      });
+
+      // example 13
+      play(13, function(){
+        var moveBack = move('#example-13 .box')
+          .set('background-color', 'white')
+          .x(0);
+
+        move('#example-13 .box')
+          .set('background-color', 'red')
+          .x(500)
+          .then(moveBack)
+          .end();
+
+        move('#example-13 .box2')
+          .set('background-color', 'red')
+          .x(500)
+          .scale(.5)
+          .rotate(60)
+            .then()
+              .rotate(30)
+              .scale(1.5)
+              .set('border-radius', 5)
+              .set('background-color', 'white')
+              .then()
+                .set('opacity', 0)
+                .pop()
+              .pop()
+          .end();
+      });
+    </script>
     </div>
   </body>
 </html>
