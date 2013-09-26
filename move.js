@@ -775,7 +775,7 @@ Move.prototype.rotate = function(n){
  */
 
 Move.prototype.ease = function(fn){
-  fn = move.ease[fn] || fn || 'ease';
+  fn = Move.ease[fn] || fn || 'ease';
   return this.setVendorProperty('transition-timing-function', fn);
 };
 
