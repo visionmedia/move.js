@@ -2,7 +2,7 @@
   "name": "move",
   "description": "CSS3 backed JavaScript animation framework",
   "repo": "visionmedia/move.js",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "keywords": ["animation", "css3"],
   "scripts": ["index.js"],
   "dependencies": {
