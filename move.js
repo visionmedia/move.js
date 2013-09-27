@@ -443,43 +443,6 @@ exports.engine = function(obj){
 };
 
 });
-require.register("component-css/index.js", function(exports, require, module){
-
-/**
- * Properties to ignore appending "px".
- */
-
-var ignore = {
-  columnCount: true,
-  fillOpacity: true,
-  fontWeight: true,
-  lineHeight: true,
-  opacity: true,
-  orphans: true,
-  widows: true,
-  zIndex: true,
-  zoom: true
-};
-
-/**
- * Set `el` css values.
- *
- * @param {Element} el
- * @param {Object} obj
- * @return {Element}
- * @api public
- */
-
-module.exports = function(el, obj){
-  for (var key in obj) {
-    var val = obj[key];
-    if ('number' == typeof val && !ignore[key]) val += 'px';
-    el.style[key] = val;
-  }
-  return el;
-};
-
-});
 require.register("move/index.js", function(exports, require, module){
 
 /**
@@ -489,7 +452,6 @@ require.register("move/index.js", function(exports, require, module){
 var has3d = require('has-translate3d');
 var Emitter = require('emitter');
 var query = require('query');
-var css = require('css');
 
 /**
  * CSS Translate
@@ -516,7 +478,7 @@ var style = window.getComputedStyle
  * Library version.
  */
 
-Move.version = '0.0.3';
+Move.version = '0.2.1';
 
 /**
  * Defaults.
@@ -947,7 +909,15 @@ Move.prototype.transition = function(prop){
  */
 
 Move.prototype.applyProperties = function(){
-  css(this.el, this._props);
+  var props = this._props
+    , el = this.el;
+
+  for (var prop in props) {
+    if (props.hasOwnProperty(prop)) {
+      el.style.setProperty(prop, props[prop], '');
+    }
+  }
+
   return this;
 };
 
@@ -1049,7 +1019,6 @@ Move.prototype.end = function(fn){
 
 
 
-
 require.alias("component-has-translate3d/index.js", "move/deps/has-translate3d/index.js");
 require.alias("component-has-translate3d/index.js", "has-translate3d/index.js");
 require.alias("component-transform-property/index.js", "component-has-translate3d/deps/transform-property/index.js");
@@ -1060,9 +1029,6 @@ require.alias("component-indexof/index.js", "component-emitter/deps/indexof/inde
 
 require.alias("component-query/index.js", "move/deps/query/index.js");
 require.alias("component-query/index.js", "query/index.js");
-
-require.alias("component-css/index.js", "move/deps/css/index.js");
-require.alias("component-css/index.js", "css/index.js");
 if (typeof exports == "object") {
   module.exports = require("move");
 } else if (typeof define == "function" && define.amd) {

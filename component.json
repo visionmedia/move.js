@@ -8,7 +8,6 @@
   "dependencies": {
     "component/has-translate3d": "*",
     "component/emitter": "*",
-    "component/query": "*",
-    "component/css": "*"
+    "component/query": "*"
   }
 }
