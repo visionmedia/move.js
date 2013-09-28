@@ -777,7 +777,7 @@ var style = window.getComputedStyle
  * Library version.
  */
 
-Move.version = '0.2.1';
+Move.version = '0.3.1';
 
 /**
  * Export `ease`
@@ -1252,6 +1252,21 @@ Move.prototype.pop = function(){
 };
 
 /**
+ * Reset duration.
+ *
+ * @return {Move}
+ * @api public
+ */
+
+Move.prototype.reset = function(){
+  this.el.style.webkitTransitionDuration =
+  this.el.style.mozTransitionDuration =
+  this.el.style.msTransitionDuration =
+  this.el.style.oTransitionDuration = 0;
+  return this;
+};
+
+/**
  * Start animation, optionally calling `fn` when complete.
  *
  * @param {Function} fn
@@ -1279,6 +1294,7 @@ Move.prototype.end = function(fn){
 
   // emit "end" when complete
   after.once(this.el, function(){
+    self.reset();
     self.emit('end');
   });
 
