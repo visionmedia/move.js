@@ -352,6 +352,7 @@ Move.prototype.setVendorProperty = function(prop, val){
 
 Move.prototype.set = function(prop, val){
   this.transition(prop);
+  if ('number' == typeof val) val += 'px';
   this._props[prop] = val;
   return this;
 };
