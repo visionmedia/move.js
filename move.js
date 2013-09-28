@@ -778,7 +778,7 @@ var style = window.getComputedStyle
  * Library version.
  */
 
-Move.version = '0.3.0';
+Move.version = '0.3.1';
 
 /**
  * Export `ease`
