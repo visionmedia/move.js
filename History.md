@@ -1,4 +1,10 @@
 
+0.3.0 / 2013-09-28
+==================
+
+ * use after-transition, closes #25 and #22
+ * move easing functions to a different component, closes #27
+
 0.2.2 / 2013-09-27
 ==================
 
