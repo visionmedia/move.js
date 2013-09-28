@@ -419,6 +419,45 @@ Emitter.prototype.hasListeners = function(event){
 };
 
 });
+require.register("yields-css-ease/index.js", function(exports, require, module){
+
+/**
+ * CSS Easing functions
+ */
+
+module.exports = {
+    'in':                'ease-in'
+  , 'out':               'ease-out'
+  , 'in-out':            'ease-in-out'
+  , 'snap':              'cubic-bezier(0,1,.5,1)'
+  , 'linear':            'cubic-bezier(0.250, 0.250, 0.750, 0.750)'
+  , 'ease-in-quad':      'cubic-bezier(0.550, 0.085, 0.680, 0.530)'
+  , 'ease-in-cubic':     'cubic-bezier(0.550, 0.055, 0.675, 0.190)'
+  , 'ease-in-quart':     'cubic-bezier(0.895, 0.030, 0.685, 0.220)'
+  , 'ease-in-quint':     'cubic-bezier(0.755, 0.050, 0.855, 0.060)'
+  , 'ease-in-sine':      'cubic-bezier(0.470, 0.000, 0.745, 0.715)'
+  , 'ease-in-expo':      'cubic-bezier(0.950, 0.050, 0.795, 0.035)'
+  , 'ease-in-circ':      'cubic-bezier(0.600, 0.040, 0.980, 0.335)'
+  , 'ease-in-back':      'cubic-bezier(0.600, -0.280, 0.735, 0.045)'
+  , 'ease-out-quad':     'cubic-bezier(0.250, 0.460, 0.450, 0.940)'
+  , 'ease-out-cubic':    'cubic-bezier(0.215, 0.610, 0.355, 1.000)'
+  , 'ease-out-quart':    'cubic-bezier(0.165, 0.840, 0.440, 1.000)'
+  , 'ease-out-quint':    'cubic-bezier(0.230, 1.000, 0.320, 1.000)'
+  , 'ease-out-sine':     'cubic-bezier(0.390, 0.575, 0.565, 1.000)'
+  , 'ease-out-expo':     'cubic-bezier(0.190, 1.000, 0.220, 1.000)'
+  , 'ease-out-circ':     'cubic-bezier(0.075, 0.820, 0.165, 1.000)'
+  , 'ease-out-back':     'cubic-bezier(0.175, 0.885, 0.320, 1.275)'
+  , 'ease-out-quad':     'cubic-bezier(0.455, 0.030, 0.515, 0.955)'
+  , 'ease-out-cubic':    'cubic-bezier(0.645, 0.045, 0.355, 1.000)'
+  , 'ease-in-out-quart': 'cubic-bezier(0.770, 0.000, 0.175, 1.000)'
+  , 'ease-in-out-quint': 'cubic-bezier(0.860, 0.000, 0.070, 1.000)'
+  , 'ease-in-out-sine':  'cubic-bezier(0.445, 0.050, 0.550, 0.950)'
+  , 'ease-in-out-expo':  'cubic-bezier(1.000, 0.000, 0.000, 1.000)'
+  , 'ease-in-out-circ':  'cubic-bezier(0.785, 0.135, 0.150, 0.860)'
+  , 'ease-in-out-back':  'cubic-bezier(0.680, -0.550, 0.265, 1.550)'
+};
+
+});
 require.register("component-query/index.js", function(exports, require, module){
 
 function one(selector, el) {
@@ -451,6 +490,7 @@ require.register("move/index.js", function(exports, require, module){
 
 var has3d = require('has-translate3d');
 var Emitter = require('emitter');
+var ease = require('css-ease');
 var query = require('query');
 
 /**
@@ -489,42 +529,6 @@ Move.version = '0.2.1';
 
 Move.defaults = {
   duration: 500
-};
-
-/**
- * Easing functions.
- */
-
-Move.ease = {
-    'in':                'ease-in'
-  , 'out':               'ease-out'
-  , 'in-out':            'ease-in-out'
-  , 'snap':              'cubic-bezier(0,1,.5,1)'
-  , 'linear':            'cubic-bezier(0.250, 0.250, 0.750, 0.750)'
-  , 'ease-in-quad':      'cubic-bezier(0.550, 0.085, 0.680, 0.530)'
-  , 'ease-in-cubic':     'cubic-bezier(0.550, 0.055, 0.675, 0.190)'
-  , 'ease-in-quart':     'cubic-bezier(0.895, 0.030, 0.685, 0.220)'
-  , 'ease-in-quint':     'cubic-bezier(0.755, 0.050, 0.855, 0.060)'
-  , 'ease-in-sine':      'cubic-bezier(0.470, 0.000, 0.745, 0.715)'
-  , 'ease-in-expo':      'cubic-bezier(0.950, 0.050, 0.795, 0.035)'
-  , 'ease-in-circ':      'cubic-bezier(0.600, 0.040, 0.980, 0.335)'
-  , 'ease-in-back':      'cubic-bezier(0.600, -0.280, 0.735, 0.045)'
-  , 'ease-out-quad':     'cubic-bezier(0.250, 0.460, 0.450, 0.940)'
-  , 'ease-out-cubic':    'cubic-bezier(0.215, 0.610, 0.355, 1.000)'
-  , 'ease-out-quart':    'cubic-bezier(0.165, 0.840, 0.440, 1.000)'
-  , 'ease-out-quint':    'cubic-bezier(0.230, 1.000, 0.320, 1.000)'
-  , 'ease-out-sine':     'cubic-bezier(0.390, 0.575, 0.565, 1.000)'
-  , 'ease-out-expo':     'cubic-bezier(0.190, 1.000, 0.220, 1.000)'
-  , 'ease-out-circ':     'cubic-bezier(0.075, 0.820, 0.165, 1.000)'
-  , 'ease-out-back':     'cubic-bezier(0.175, 0.885, 0.320, 1.275)'
-  , 'ease-out-quad':     'cubic-bezier(0.455, 0.030, 0.515, 0.955)'
-  , 'ease-out-cubic':    'cubic-bezier(0.645, 0.045, 0.355, 1.000)'
-  , 'ease-in-out-quart': 'cubic-bezier(0.770, 0.000, 0.175, 1.000)'
-  , 'ease-in-out-quint': 'cubic-bezier(0.860, 0.000, 0.070, 1.000)'
-  , 'ease-in-out-sine':  'cubic-bezier(0.445, 0.050, 0.550, 0.950)'
-  , 'ease-in-out-expo':  'cubic-bezier(1.000, 0.000, 0.000, 1.000)'
-  , 'ease-in-out-circ':  'cubic-bezier(0.785, 0.135, 0.150, 0.860)'
-  , 'ease-in-out-back':  'cubic-bezier(0.680, -0.550, 0.265, 1.550)'
 };
 
 /**
@@ -737,7 +741,7 @@ Move.prototype.rotate = function(n){
  */
 
 Move.prototype.ease = function(fn){
-  fn = Move.ease[fn] || fn || 'ease';
+  fn = ease[fn] || fn || 'ease';
   return this.setVendorProperty('transition-timing-function', fn);
 };
 
@@ -1019,6 +1023,7 @@ Move.prototype.end = function(fn){
 
 
 
+
 require.alias("component-has-translate3d/index.js", "move/deps/has-translate3d/index.js");
 require.alias("component-has-translate3d/index.js", "has-translate3d/index.js");
 require.alias("component-transform-property/index.js", "component-has-translate3d/deps/transform-property/index.js");
@@ -1027,6 +1032,10 @@ require.alias("component-emitter/index.js", "move/deps/emitter/index.js");
 require.alias("component-emitter/index.js", "emitter/index.js");
 require.alias("component-indexof/index.js", "component-emitter/deps/indexof/index.js");
 
+require.alias("yields-css-ease/index.js", "move/deps/css-ease/index.js");
+require.alias("yields-css-ease/index.js", "move/deps/css-ease/index.js");
+require.alias("yields-css-ease/index.js", "css-ease/index.js");
+require.alias("yields-css-ease/index.js", "yields-css-ease/index.js");
 require.alias("component-query/index.js", "move/deps/query/index.js");
 require.alias("component-query/index.js", "query/index.js");
 if (typeof exports == "object") {
