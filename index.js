@@ -37,6 +37,12 @@ var style = window.getComputedStyle
 Move.version = '0.2.1';
 
 /**
+ * Export `ease`
+ */
+
+Move.ease = ease;
+
+/**
  * Defaults.
  *
  *   `duration` - default duration of 500ms
