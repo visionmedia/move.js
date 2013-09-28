@@ -122,10 +122,10 @@ Move.prototype.transform = function(transform){
  */
 
 Move.prototype.skew = function(x, y){
-  y = y || 0;
   return this.transform('skew('
     + x + 'deg, '
-    + y + 'deg)');
+    + (y || 0)
+    + 'deg)');
 };
 
 /**
@@ -163,9 +163,10 @@ Move.prototype.skewY = function(n){
 
 Move.prototype.translate =
 Move.prototype.to = function(x, y){
-  y = y || 0;
-  return this.transform(translate
-    .join(x + 'px, ' + y + 'px'));
+  return this.transform(translate.join(''
+    + x +'px, '
+    + (y || 0)
+    + 'px'));
 };
 
 /**
@@ -205,10 +206,10 @@ Move.prototype.y = function(n){
  */
 
 Move.prototype.scale = function(x, y){
-  y = null == y ? x : y;
   return this.transform('scale('
     + x + ', '
-    + y + ')');
+    + (y || x)
+    + ')');
 };
 
 /**
