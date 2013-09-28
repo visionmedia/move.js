@@ -7,6 +7,7 @@
   "scripts": ["index.js"],
   "dependencies": {
     "component/has-translate3d": "*",
+    "yields/after-transition": "*",
     "component/emitter": "*",
     "yields/css-ease": "*",
     "component/query": "*"

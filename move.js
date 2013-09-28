@@ -245,6 +245,265 @@ document.body.removeChild(el);
 module.exports = null != val && val.length && 'none' != val;
 
 });
+require.register("yields-has-transitions/index.js", function(exports, require, module){
+/**
+ * Check if `el` or browser supports transitions.
+ *
+ * @param {Element} el
+ * @return {Boolean}
+ * @api public
+ */
+
+exports = module.exports = function(el){
+  switch (arguments.length) {
+    case 0: return bool;
+    case 1: return bool
+      ? transitions(el)
+      : bool;
+  }
+};
+
+/**
+ * Check if the given `el` has transitions.
+ *
+ * @param {Element} el
+ * @return {Boolean}
+ * @api private
+ */
+
+function transitions(el, styl){
+  if (el.transition) return true;
+  styl = window.getComputedStyle(el);
+  return !! parseFloat(styl.transitionDuration, 10);
+}
+
+/**
+ * Style.
+ */
+
+var styl = document.body.style;
+
+/**
+ * Export support.
+ */
+
+var bool = 'transition' in styl
+  || 'webkitTransition' in styl
+  || 'MozTransition' in styl
+  || 'msTransition' in styl;
+
+});
+require.register("component-event/index.js", function(exports, require, module){
+
+/**
+ * Bind `el` event `type` to `fn`.
+ *
+ * @param {Element} el
+ * @param {String} type
+ * @param {Function} fn
+ * @param {Boolean} capture
+ * @return {Function}
+ * @api public
+ */
+
+exports.bind = function(el, type, fn, capture){
+  if (el.addEventListener) {
+    el.addEventListener(type, fn, capture || false);
+  } else {
+    el.attachEvent('on' + type, fn);
+  }
+  return fn;
+};
+
+/**
+ * Unbind `el` event `type`'s callback `fn`.
+ *
+ * @param {Element} el
+ * @param {String} type
+ * @param {Function} fn
+ * @param {Boolean} capture
+ * @return {Function}
+ * @api public
+ */
+
+exports.unbind = function(el, type, fn, capture){
+  if (el.removeEventListener) {
+    el.removeEventListener(type, fn, capture || false);
+  } else {
+    el.detachEvent('on' + type, fn);
+  }
+  return fn;
+};
+
+});
+require.register("ecarter-css-emitter/index.js", function(exports, require, module){
+/**
+ * Module Dependencies
+ */
+
+var events = require('event');
+
+// CSS events
+
+var watch = [
+  'transitionend'
+, 'webkitTransitionEnd'
+, 'oTransitionEnd'
+, 'MSTransitionEnd'
+, 'animationend'
+, 'webkitAnimationEnd'
+, 'oAnimationEnd'
+, 'MSAnimationEnd'
+];
+
+/**
+ * Expose `CSSnext`
+ */
+
+module.exports = CssEmitter;
+
+/**
+ * Initialize a new `CssEmitter`
+ *
+ */
+
+function CssEmitter(element){
+  if (!(this instanceof CssEmitter)) return new CssEmitter(element);
+  this.el = element;
+}
+
+/**
+ * Bind CSS events.
+ *
+ * @api public
+ */
+
+CssEmitter.prototype.bind = function(fn){
+  for (var i=0; i < watch.length; i++) {
+    events.bind(this.el, watch[i], fn);
+  }
+};
+
+/**
+ * Unbind CSS events
+ * 
+ * @api public
+ */
+
+CssEmitter.prototype.unbind = function(fn){
+  for (var i=0; i < watch.length; i++) {
+    events.unbind(this.el, watch[i], fn);
+  }
+};
+
+
+
+});
+require.register("component-once/index.js", function(exports, require, module){
+
+/**
+ * Identifier.
+ */
+
+var n = 0;
+
+/**
+ * Global.
+ */
+
+var global = (function(){ return this })();
+
+/**
+ * Make `fn` callable only once.
+ *
+ * @param {Function} fn
+ * @return {Function}
+ * @api public
+ */
+
+module.exports = function(fn) {
+  var id = n++;
+  var called;
+
+  function once(){
+    // no receiver
+    if (this == global) {
+      if (called) return;
+      called = true;
+      return fn.apply(this, arguments);
+    }
+
+    // receiver
+    var key = '__called_' + id + '__';
+    if (this[key]) return;
+    this[key] = true;
+    return fn.apply(this, arguments);
+  }
+
+  return once;
+};
+
+});
+require.register("yields-after-transition/index.js", function(exports, require, module){
+
+/**
+ * dependencies
+ */
+
+var has = require('has-transitions')
+  , emitter = require('css-emitter')
+  , once = require('once');
+
+/**
+ * Transition support.
+ */
+
+var supported = has();
+
+/**
+ * Export `after`
+ */
+
+module.exports = after;
+
+/**
+ * Invoke the given `fn` after transitions
+ *
+ * It will be invoked only if the browser
+ * supports transitions __and__
+ * the element has transitions
+ * set in `.style` or css.
+ *
+ * @param {Element} el
+ * @param {Function} fn
+ * @return {Function} fn
+ * @api public
+ */
+
+function after(el, fn){
+  if (!supported || !has(el)) return fn();
+  emitter(el).bind(fn);
+  return fn;
+};
+
+/**
+ * Same as `after()` only the function is invoked once.
+ *
+ * @param {Element} el
+ * @param {Function} fn
+ * @return {Function}
+ * @api public
+ */
+
+after.once = function(el, fn){
+  var callback = once(fn);
+  after(el, fn = function(){
+    emitter(el).unbind(fn);
+    callback();
+  });
+};
+
+});
 require.register("component-indexof/index.js", function(exports, require, module){
 module.exports = function(arr, obj){
   if (arr.indexOf) return arr.indexOf(obj);
@@ -488,6 +747,7 @@ require.register("move/index.js", function(exports, require, module){
  * Module Dependencies.
  */
 
+var after = require('after-transition');
 var has3d = require('has-translate3d');
 var Emitter = require('emitter');
 var ease = require('css-ease');
@@ -1012,9 +1272,9 @@ Move.prototype.end = function(fn){
   if (fn) this.then(fn);
 
   // emit "end" when complete
-  setTimeout(function(){
+  after.once(this.el, function(){
     self.emit('end');
-  }, this._duration);
+  });
 
   return this;
 };
@@ -1024,10 +1284,28 @@ Move.prototype.end = function(fn){
 
 
 
+
+
+
 require.alias("component-has-translate3d/index.js", "move/deps/has-translate3d/index.js");
 require.alias("component-has-translate3d/index.js", "has-translate3d/index.js");
 require.alias("component-transform-property/index.js", "component-has-translate3d/deps/transform-property/index.js");
 
+require.alias("yields-after-transition/index.js", "move/deps/after-transition/index.js");
+require.alias("yields-after-transition/index.js", "move/deps/after-transition/index.js");
+require.alias("yields-after-transition/index.js", "after-transition/index.js");
+require.alias("yields-has-transitions/index.js", "yields-after-transition/deps/has-transitions/index.js");
+require.alias("yields-has-transitions/index.js", "yields-after-transition/deps/has-transitions/index.js");
+require.alias("yields-has-transitions/index.js", "yields-has-transitions/index.js");
+require.alias("ecarter-css-emitter/index.js", "yields-after-transition/deps/css-emitter/index.js");
+require.alias("component-emitter/index.js", "ecarter-css-emitter/deps/emitter/index.js");
+require.alias("component-indexof/index.js", "component-emitter/deps/indexof/index.js");
+
+require.alias("component-event/index.js", "ecarter-css-emitter/deps/event/index.js");
+
+require.alias("component-once/index.js", "yields-after-transition/deps/once/index.js");
+
+require.alias("yields-after-transition/index.js", "yields-after-transition/index.js");
 require.alias("component-emitter/index.js", "move/deps/emitter/index.js");
 require.alias("component-emitter/index.js", "emitter/index.js");
 require.alias("component-indexof/index.js", "component-emitter/deps/indexof/index.js");
