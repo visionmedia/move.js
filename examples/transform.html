@@ -28,7 +28,10 @@
           .duration('0.3s')
           .scale(.1)
           .pop()
-        .end();
+        .end(function(){
+          var el = document.getElementById('square');
+          el.style.webkitTransform = 'scale(.5)';
+        });
     </script>
   </body>
 </html>

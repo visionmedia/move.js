@@ -509,6 +509,21 @@ Move.prototype.pop = function(){
 };
 
 /**
+ * Reset duration.
+ *
+ * @return {Move}
+ * @api public
+ */
+
+Move.prototype.reset = function(){
+  this.el.style.webkitTransitionDuration =
+  this.el.style.mozTransitionDuration =
+  this.el.style.msTransitionDuration =
+  this.el.style.oTransitionDuration = 0;
+  return this;
+};
+
+/**
  * Start animation, optionally calling `fn` when complete.
  *
  * @param {Function} fn
@@ -536,6 +551,7 @@ Move.prototype.end = function(fn){
 
   // emit "end" when complete
   after.once(this.el, function(){
+    self.reset();
     self.emit('end');
   });
 
