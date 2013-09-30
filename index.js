@@ -8,6 +8,7 @@ var has3d = require('has-translate3d');
 var Emitter = require('emitter');
 var ease = require('css-ease');
 var query = require('query');
+var css = require('css');
 
 /**
  * CSS Translate
@@ -16,22 +17,6 @@ var query = require('query');
 var translate = has3d
   ? ['translate3d(', ', 0)']
   : ['translate(', ')'];
-
-/**
- * CSS Number props
- */
-
-var ignore = {
-  columnCount: true,
-  fillOpacity: true,
-  fontWeight: true,
-  lineHeight: true,
-  opacity: true,
-  orphans: true,
-  widows: true,
-  zIndex: true,
-  zoom: true
-};
 
 /**
  * Export `Move`
@@ -452,17 +437,7 @@ Move.prototype.transition = function(prop){
  */
 
 Move.prototype.applyProperties = function(){
-  var props = this._props
-    , el = this.el;
-
-  for (var prop in props) {
-    if (props.hasOwnProperty(prop)) {
-      var value = props[prop];
-      if ('number' == typeof value && !ignore[prop]) value += 'px';
-      el.style.setProperty(prop, props[prop], '');
-    }
-  }
-
+  css(this.el, this._props);
   return this;
 };
 
