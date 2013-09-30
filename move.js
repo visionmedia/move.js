@@ -762,6 +762,22 @@ var translate = has3d
   : ['translate(', ')'];
 
 /**
+ * CSS Number props
+ */
+
+var ignore = {
+  columnCount: true,
+  fillOpacity: true,
+  fontWeight: true,
+  lineHeight: true,
+  opacity: true,
+  orphans: true,
+  widows: true,
+  zIndex: true,
+  zoom: true
+};
+
+/**
  * Export `Move`
  */
 
@@ -1103,7 +1119,6 @@ Move.prototype.setVendorProperty = function(prop, val){
 
 Move.prototype.set = function(prop, val){
   this.transition(prop);
-  if ('number' == typeof val) val += 'px';
   this._props[prop] = val;
   return this;
 };
@@ -1186,6 +1201,8 @@ Move.prototype.applyProperties = function(){
 
   for (var prop in props) {
     if (props.hasOwnProperty(prop)) {
+      var value = props[prop];
+      if ('number' == typeof value && !ignore[prop]) value += 'px';
       el.style.setProperty(prop, props[prop], '');
     }
   }
