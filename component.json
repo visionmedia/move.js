@@ -8,7 +8,6 @@
   "dependencies": {
     "component/has-translate3d": "*",
     "yields/after-transition": "*",
-    "ianstormtaylor/css": "*",
     "component/emitter": "*",
     "yields/css-ease": "*",
     "component/query": "*"

@@ -8,7 +8,6 @@ var has3d = require('has-translate3d');
 var Emitter = require('emitter');
 var ease = require('css-ease');
 var query = require('query');
-var css = require('css');
 
 /**
  * CSS Translate
@@ -437,7 +436,9 @@ Move.prototype.transition = function(prop){
  */
 
 Move.prototype.applyProperties = function(){
-  css(this.el, this._props);
+  for (var prop in this._props) {
+    this.el.style.setProperty(prop, this._props[prop]);
+  }
   return this;
 };
 

@@ -504,267 +504,6 @@ after.once = function(el, fn){
 };
 
 });
-require.register("component-type/index.js", function(exports, require, module){
-
-/**
- * toString ref.
- */
-
-var toString = Object.prototype.toString;
-
-/**
- * Return the type of `val`.
- *
- * @param {Mixed} val
- * @return {String}
- * @api public
- */
-
-module.exports = function(val){
-  switch (toString.call(val)) {
-    case '[object Function]': return 'function';
-    case '[object Date]': return 'date';
-    case '[object RegExp]': return 'regexp';
-    case '[object Arguments]': return 'arguments';
-    case '[object Array]': return 'array';
-    case '[object String]': return 'string';
-  }
-
-  if (val === null) return 'null';
-  if (val === undefined) return 'undefined';
-  if (val && val.nodeType === 1) return 'element';
-  if (val === Object(val)) return 'object';
-
-  return typeof val;
-};
-
-});
-require.register("ianstormtaylor-to-no-case/index.js", function(exports, require, module){
-
-/**
- * Expose `toNoCase`.
- */
-
-module.exports = toNoCase;
-
-
-/**
- * Test whether a string is camel-case.
- */
-
-var hasSpace = /\s/;
-var hasCamel = /[a-z][A-Z]/;
-var hasSeparator = /[\W_]/;
-
-
-/**
- * Remove any starting case from a `string`, like camel or snake, but keep
- * spaces and punctuation that may be important otherwise.
- *
- * @param {String} string
- * @return {String}
- */
-
-function toNoCase (string) {
-  if (hasSpace.test(string)) return string.toLowerCase();
-
-  if (hasSeparator.test(string)) string = unseparate(string);
-  if (hasCamel.test(string)) string = uncamelize(string);
-  return string.toLowerCase();
-}
-
-
-/**
- * Separator splitter.
- */
-
-var separatorSplitter = /[\W_]+(.|$)/g;
-
-
-/**
- * Un-separate a `string`.
- *
- * @param {String} string
- * @return {String}
- */
-
-function unseparate (string) {
-  return string.replace(separatorSplitter, function (m, next) {
-    return next ? ' ' + next : '';
-  });
-}
-
-
-/**
- * Camelcase splitter.
- */
-
-var camelSplitter = /(.)([A-Z]+)/g;
-
-
-/**
- * Un-camelcase a `string`.
- *
- * @param {String} string
- * @return {String}
- */
-
-function uncamelize (string) {
-  return string.replace(camelSplitter, function (m, previous, uppers) {
-    return previous + ' ' + uppers.toLowerCase().split('').join(' ');
-  });
-}
-});
-require.register("ianstormtaylor-to-space-case/index.js", function(exports, require, module){
-
-var clean = require('to-no-case');
-
-
-/**
- * Expose `toSpaceCase`.
- */
-
-module.exports = toSpaceCase;
-
-
-/**
- * Convert a `string` to space case.
- *
- * @param {String} string
- * @return {String}
- */
-
-
-function toSpaceCase (string) {
-  return clean(string).replace(/[\W_]+(.|$)/g, function (matches, match) {
-    return match ? ' ' + match : '';
-  });
-}
-});
-require.register("ianstormtaylor-to-camel-case/index.js", function(exports, require, module){
-
-var toSpace = require('to-space-case');
-
-
-/**
- * Expose `toCamelCase`.
- */
-
-module.exports = toCamelCase;
-
-
-/**
- * Convert a `string` to camel case.
- *
- * @param {String} string
- * @return {String}
- */
-
-
-function toCamelCase (string) {
-  return toSpace(string).replace(/\s(\w)/g, function (matches, letter) {
-    return letter.toUpperCase();
-  });
-}
-});
-require.register("jkroso-computed-style/index.js", function(exports, require, module){
-
-/**
- * Get the computed style of a DOM element
- * 
- *   style(document.body) // => {width:'500px', ...}
- * 
- * @param {Element} element
- * @return {Object}
- */
-
-// Accessing via window for jsDOM support
-module.exports = window.getComputedStyle
-
-// Fallback to elem.currentStyle for IE < 9
-if (!module.exports) {
-	module.exports = function (elem) {
-		return elem.currentStyle
-	}
-}
-
-});
-require.register("ianstormtaylor-css/index.js", function(exports, require, module){
-
-var camel = require('to-camel-case')
-  , computed = require('computed-style')
-  , type = require('type');
-
-
-/**
- * Expose `css`.
- */
-
-module.exports = css;
-
-/**
- * Don't append `px`.
- */
-
-var ignore = {
-  columnCount: true,
-  fillOpacity: true,
-  fontWeight: true,
-  lineHeight: true,
-  opacity: true,
-  orphans: true,
-  widows: true,
-  zIndex: true,
-  zoom: true
-};
-
-/**
- * Get or set CSS properties of an `el`.
- *
- * @param {Element} el
- * @param {String|Object} prop
- * @param {String} value (optional)
- */
-
-function css (el, prop, value) {
-  if (type(prop) == 'object') {
-    for (var key in prop) set(el, key, prop[key]);
-    return;
-  }
-
-  return arguments.length == 3
-    ? set(el, prop, value)
-    : get(el, prop);
-}
-
-
-/**
- * Get the current CSS `prop` value of an `el`.
- *
- * @param {Element} el
- * @param {String} prop
- */
-
-function get (el, prop) {
-  return computed(el)[prop];
-}
-
-
-/**
- * Set a CSS `prop` to `value` on an `element`.
- *
- * @param {Element} element
- * @param {String} prop
- * @param {String} value
- */
-
-function set (el, prop, value) {
-  prop = camel(prop);
-  if ('number' == typeof value && !ignore[prop]) value += 'px';
-  el.style[prop] = value;
-}
-
-});
 require.register("component-indexof/index.js", function(exports, require, module){
 module.exports = function(arr, obj){
   if (arr.indexOf) return arr.indexOf(obj);
@@ -822,7 +561,8 @@ function mixin(obj) {
  * @api public
  */
 
-Emitter.prototype.on = function(event, fn){
+Emitter.prototype.on =
+Emitter.prototype.addEventListener = function(event, fn){
   this._callbacks = this._callbacks || {};
   (this._callbacks[event] = this._callbacks[event] || [])
     .push(fn);
@@ -865,7 +605,8 @@ Emitter.prototype.once = function(event, fn){
 
 Emitter.prototype.off =
 Emitter.prototype.removeListener =
-Emitter.prototype.removeAllListeners = function(event, fn){
+Emitter.prototype.removeAllListeners =
+Emitter.prototype.removeEventListener = function(event, fn){
   this._callbacks = this._callbacks || {};
 
   // all
@@ -979,7 +720,6 @@ module.exports = {
 
 });
 require.register("component-query/index.js", function(exports, require, module){
-
 function one(selector, el) {
   return el.querySelector(selector);
 }
@@ -999,6 +739,7 @@ exports.engine = function(obj){
   if (!obj.all) throw new Error('.all callback required');
   one = obj.one;
   exports.all = obj.all;
+  return exports;
 };
 
 });
@@ -1013,7 +754,6 @@ var has3d = require('has-translate3d');
 var Emitter = require('emitter');
 var ease = require('css-ease');
 var query = require('query');
-var css = require('css');
 
 /**
  * CSS Translate
@@ -1442,7 +1182,9 @@ Move.prototype.transition = function(prop){
  */
 
 Move.prototype.applyProperties = function(){
-  css(this.el, this._props);
+  for (var prop in this._props) {
+    this.el.style.setProperty(prop, this._props[prop]);
+  }
   return this;
 };
 
@@ -1567,6 +1309,10 @@ Move.prototype.end = function(fn){
 
 
 
+
+
+
+
 require.alias("component-has-translate3d/index.js", "move/deps/has-translate3d/index.js");
 require.alias("component-has-translate3d/index.js", "has-translate3d/index.js");
 require.alias("component-transform-property/index.js", "component-has-translate3d/deps/transform-property/index.js");
@@ -1586,16 +1332,6 @@ require.alias("component-event/index.js", "ecarter-css-emitter/deps/event/index.
 require.alias("component-once/index.js", "yields-after-transition/deps/once/index.js");
 
 require.alias("yields-after-transition/index.js", "yields-after-transition/index.js");
-require.alias("ianstormtaylor-css/index.js", "move/deps/css/index.js");
-require.alias("ianstormtaylor-css/index.js", "css/index.js");
-require.alias("component-type/index.js", "ianstormtaylor-css/deps/type/index.js");
-
-require.alias("ianstormtaylor-to-camel-case/index.js", "ianstormtaylor-css/deps/to-camel-case/index.js");
-require.alias("ianstormtaylor-to-space-case/index.js", "ianstormtaylor-to-camel-case/deps/to-space-case/index.js");
-require.alias("ianstormtaylor-to-no-case/index.js", "ianstormtaylor-to-space-case/deps/to-no-case/index.js");
-
-require.alias("jkroso-computed-style/index.js", "ianstormtaylor-css/deps/computed-style/index.js");
-
 require.alias("component-emitter/index.js", "move/deps/emitter/index.js");
 require.alias("component-emitter/index.js", "emitter/index.js");
 require.alias("component-indexof/index.js", "component-emitter/deps/indexof/index.js");
