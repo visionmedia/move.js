@@ -1,4 +1,3 @@
-
 /**
  * Module Dependencies.
  */
@@ -437,7 +436,7 @@ Move.prototype.transition = function(prop){
 
 Move.prototype.applyProperties = function(){
   for (var prop in this._props) {
-    this.el.style.setProperty(prop, this._props[prop]);
+    this.el.style.setProperty(prop, this._props[prop], '');
   }
   return this;
 };
