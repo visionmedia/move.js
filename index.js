@@ -512,7 +512,8 @@ Move.prototype.reset = function(){
   this.el.style.webkitTransitionDuration =
   this.el.style.mozTransitionDuration =
   this.el.style.msTransitionDuration =
-  this.el.style.oTransitionDuration = 0;
+  this.el.style.oTransitionDuration =
+  this.el.style.transitionDuration = 0;
   return this;
 };
 
