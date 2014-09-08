@@ -1,4 +1,11 @@
 
+0.4.0 / 2014-09-08
+==================
+
+ * Add Move.matrix() [abliss]
+ * Remove transition duration properties instead of setting them to 0 [kimmobrunfeldt]
+ * add third argument to .setProperty [eivindfjeldstad]
+
 0.3.3 / 2013-11-11
 ==================
 

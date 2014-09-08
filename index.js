@@ -224,6 +224,23 @@ Move.prototype.scaleX = function(n){
 };
 
 /**
+ * Apply a matrix transformation
+ *
+ * @param {Number} m11 A matrix coefficient
+ * @param {Number} m12 A matrix coefficient
+ * @param {Number} m21 A matrix coefficient
+ * @param {Number} m22 A matrix coefficient
+ * @param {Number} m31 A matrix coefficient
+ * @param {Number} m32 A matrix coefficient
+ * @return {Move} for chaining
+ * @api public
+ */
+
+Move.prototype.matrix = function(m11, m12, m21, m22, m31, m32){
+  return this.transform('matrix(' + [m11,m12,m21,m22,m31,m32].join(',') + ')');
+};
+
+/**
  * Scale y axis by `n`.
  *
  * @param {Number} n

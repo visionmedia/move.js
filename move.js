@@ -27,14 +27,10 @@ function require(path, parent, orig) {
   // perform real require()
   // by invoking the module's
   // registered function
-  if (!module._resolving && !module.exports) {
-    var mod = {};
-    mod.exports = {};
-    mod.client = mod.component = true;
-    module._resolving = true;
-    module.call(this, mod.exports, require.relative(resolved), mod);
-    delete module._resolving;
-    module.exports = mod.exports;
+  if (!module.exports) {
+    module.exports = {};
+    module.client = module.component = true;
+    module.call(this, module.exports, require.relative(resolved), module);
   }
 
   return module.exports;
@@ -225,24 +221,28 @@ for (var i = 0; i < styles.length; i++) {
 require.register("component-has-translate3d/index.js", function(exports, require, module){
 
 var prop = require('transform-property');
-// IE8<= doesn't have `getComputedStyle`
-if (!prop || !window.getComputedStyle) return module.exports = false;
 
-var map = {
-  webkitTransform: '-webkit-transform',
-  OTransform: '-o-transform',
-  msTransform: '-ms-transform',
-  MozTransform: '-moz-transform',
-  transform: 'transform'
-};
+// IE <=8 doesn't have `getComputedStyle`
+if (!prop || !window.getComputedStyle) {
+  module.exports = false;
 
-// from: https://gist.github.com/lorenzopolidori/3794226
-var el = document.createElement('div');
-el.style[prop] = 'translate3d(1px,1px,1px)';
-document.body.insertBefore(el, null);
-var val = getComputedStyle(el).getPropertyValue(map[prop]);
-document.body.removeChild(el);
-module.exports = null != val && val.length && 'none' != val;
+} else {
+  var map = {
+    webkitTransform: '-webkit-transform',
+    OTransform: '-o-transform',
+    msTransform: '-ms-transform',
+    MozTransform: '-moz-transform',
+    transform: 'transform'
+  };
+
+  // from: https://gist.github.com/lorenzopolidori/3794226
+  var el = document.createElement('div');
+  el.style[prop] = 'translate3d(1px,1px,1px)';
+  document.body.insertBefore(el, null);
+  var val = getComputedStyle(el).getPropertyValue(map[prop]);
+  document.body.removeChild(el);
+  module.exports = null != val && val.length && 'none' != val;
+}
 
 });
 require.register("yields-has-transitions/index.js", function(exports, require, module){
@@ -294,6 +294,9 @@ var bool = 'transition' in styl
 
 });
 require.register("component-event/index.js", function(exports, require, module){
+var bind = window.addEventListener ? 'addEventListener' : 'attachEvent',
+    unbind = window.removeEventListener ? 'removeEventListener' : 'detachEvent',
+    prefix = bind !== 'addEventListener' ? 'on' : '';
 
 /**
  * Bind `el` event `type` to `fn`.
@@ -307,11 +310,7 @@ require.register("component-event/index.js", function(exports, require, module){
  */
 
 exports.bind = function(el, type, fn, capture){
-  if (el.addEventListener) {
-    el.addEventListener(type, fn, capture || false);
-  } else {
-    el.attachEvent('on' + type, fn);
-  }
+  el[bind](prefix + type, fn, capture || false);
   return fn;
 };
 
@@ -327,14 +326,9 @@ exports.bind = function(el, type, fn, capture){
  */
 
 exports.unbind = function(el, type, fn, capture){
-  if (el.removeEventListener) {
-    el.removeEventListener(type, fn, capture || false);
-  } else {
-    el.detachEvent('on' + type, fn);
-  }
+  el[unbind](prefix + type, fn, capture || false);
   return fn;
 };
-
 });
 require.register("ecarter-css-emitter/index.js", function(exports, require, module){
 /**
@@ -382,6 +376,7 @@ CssEmitter.prototype.bind = function(fn){
   for (var i=0; i < watch.length; i++) {
     events.bind(this.el, watch[i], fn);
   }
+  return this;
 };
 
 /**
@@ -394,8 +389,24 @@ CssEmitter.prototype.unbind = function(fn){
   for (var i=0; i < watch.length; i++) {
     events.unbind(this.el, watch[i], fn);
   }
+  return this;
 };
 
+/**
+ * Fire callback only once
+ * 
+ * @api public
+ */
+
+CssEmitter.prototype.once = function(fn){
+  var self = this;
+  function on(){
+    self.unbind(on);
+    fn.apply(self.el, arguments);
+  }
+  self.bind(on);
+  return this;
+};
 
 
 });
@@ -504,22 +515,7 @@ after.once = function(el, fn){
 };
 
 });
-require.register("component-indexof/index.js", function(exports, require, module){
-module.exports = function(arr, obj){
-  if (arr.indexOf) return arr.indexOf(obj);
-  for (var i = 0; i < arr.length; ++i) {
-    if (arr[i] === obj) return i;
-  }
-  return -1;
-};
-});
 require.register("component-emitter/index.js", function(exports, require, module){
-
-/**
- * Module dependencies.
- */
-
-var index = require('indexof');
 
 /**
  * Expose `Emitter`.
@@ -588,7 +584,7 @@ Emitter.prototype.once = function(event, fn){
     fn.apply(this, arguments);
   }
 
-  fn._off = on;
+  on.fn = fn;
   this.on(event, on);
   return this;
 };
@@ -626,8 +622,14 @@ Emitter.prototype.removeEventListener = function(event, fn){
   }
 
   // remove specific handler
-  var i = index(callbacks, fn._off || fn);
-  if (~i) callbacks.splice(i, 1);
+  var cb;
+  for (var i = 0; i < callbacks.length; i++) {
+    cb = callbacks[i];
+    if (cb === fn || cb.fn === fn) {
+      callbacks.splice(i, 1);
+      break;
+    }
+  }
   return this;
 };
 
@@ -744,7 +746,6 @@ exports.engine = function(obj){
 
 });
 require.register("move/index.js", function(exports, require, module){
-
 /**
  * Module Dependencies.
  */
@@ -971,6 +972,23 @@ Move.prototype.scaleX = function(n){
 };
 
 /**
+ * Apply a matrix transformation
+ *
+ * @param {Number} m11 A matrix coefficient
+ * @param {Number} m12 A matrix coefficient
+ * @param {Number} m21 A matrix coefficient
+ * @param {Number} m22 A matrix coefficient
+ * @param {Number} m31 A matrix coefficient
+ * @param {Number} m32 A matrix coefficient
+ * @return {Move} for chaining
+ * @api public
+ */
+
+Move.prototype.matrix = function(m11, m12, m21, m22, m31, m32){
+  return this.transform('matrix(' + [m11,m12,m21,m22,m31,m32].join(',') + ')');
+};
+
+/**
  * Scale y axis by `n`.
  *
  * @param {Number} n
@@ -992,23 +1010,6 @@ Move.prototype.scaleY = function(n){
 
 Move.prototype.rotate = function(n){
   return this.transform('rotate(' + n + 'deg)');
-};
-
-/**
- * Apply a matrix transformation
- *
- * @param {Number} m11 A matrix coefficient
- * @param {Number} m12 A matrix coefficient
- * @param {Number} m21 A matrix coefficient
- * @param {Number} m22 A matrix coefficient
- * @param {Number} m31 A matrix coefficient
- * @param {Number} m32 A matrix coefficient
- * @return {Move} for chaining
- * @api public
- */
-
-Move.prototype.matrix = function(m11, m12, m21, m22, m31, m32){
-  return this.transform('matrix(' + [m11,m12,m21,m22,m31,m32].join(',') + ')');
 };
 
 /**
@@ -1200,7 +1201,7 @@ Move.prototype.transition = function(prop){
 
 Move.prototype.applyProperties = function(){
   for (var prop in this._props) {
-    this.el.style.setProperty(prop, this._props[prop]);
+    this.el.style.setProperty(prop, this._props[prop], '');
   }
   return this;
 };
@@ -1276,7 +1277,7 @@ Move.prototype.reset = function(){
   this.el.style.webkitTransitionDuration =
   this.el.style.mozTransitionDuration =
   this.el.style.msTransitionDuration =
-  this.el.style.oTransitionDuration = 0;
+  this.el.style.oTransitionDuration = '';
   return this;
 };
 
@@ -1323,13 +1324,6 @@ Move.prototype.end = function(fn){
 
 
 
-
-
-
-
-
-
-
 require.alias("component-has-translate3d/index.js", "move/deps/has-translate3d/index.js");
 require.alias("component-has-translate3d/index.js", "has-translate3d/index.js");
 require.alias("component-transform-property/index.js", "component-has-translate3d/deps/transform-property/index.js");
@@ -1341,9 +1335,6 @@ require.alias("yields-has-transitions/index.js", "yields-after-transition/deps/h
 require.alias("yields-has-transitions/index.js", "yields-after-transition/deps/has-transitions/index.js");
 require.alias("yields-has-transitions/index.js", "yields-has-transitions/index.js");
 require.alias("ecarter-css-emitter/index.js", "yields-after-transition/deps/css-emitter/index.js");
-require.alias("component-emitter/index.js", "ecarter-css-emitter/deps/emitter/index.js");
-require.alias("component-indexof/index.js", "component-emitter/deps/indexof/index.js");
-
 require.alias("component-event/index.js", "ecarter-css-emitter/deps/event/index.js");
 
 require.alias("component-once/index.js", "yields-after-transition/deps/once/index.js");
@@ -1351,7 +1342,6 @@ require.alias("component-once/index.js", "yields-after-transition/deps/once/inde
 require.alias("yields-after-transition/index.js", "yields-after-transition/index.js");
 require.alias("component-emitter/index.js", "move/deps/emitter/index.js");
 require.alias("component-emitter/index.js", "emitter/index.js");
-require.alias("component-indexof/index.js", "component-emitter/deps/indexof/index.js");
 
 require.alias("yields-css-ease/index.js", "move/deps/css-ease/index.js");
 require.alias("yields-css-ease/index.js", "move/deps/css-ease/index.js");
