@@ -1353,6 +1353,11 @@ if (typeof exports == "object") {
   module.exports = require("move");
 } else if (typeof define == "function" && define.amd) {
   define(function(){ return require("move"); });
+} else if (typeof define == 'function' && define.cmd){
+  var move = require("move");
+  define(function(require, exports, module){
+    module.exports = move; 
+  });
 } else {
   this["move"] = require("move");
 }})();
