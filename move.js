@@ -693,7 +693,7 @@ module.exports = {
   , 'out':               'ease-out'
   , 'in-out':            'ease-in-out'
   , 'snap':              'cubic-bezier(0,1,.5,1)'
-  , 'linear':            'cubic-bezier(0.250, 0.250, 0.750, 0.750)'
+  , 'linear':            'cubic-bezier(0, 0, 1, 1)'
   , 'ease-in-quad':      'cubic-bezier(0.550, 0.085, 0.680, 0.530)'
   , 'ease-in-cubic':     'cubic-bezier(0.550, 0.055, 0.675, 0.190)'
   , 'ease-in-quart':     'cubic-bezier(0.895, 0.030, 0.685, 0.220)'
@@ -1353,6 +1353,11 @@ if (typeof exports == "object") {
   module.exports = require("move");
 } else if (typeof define == "function" && define.amd) {
   define(function(){ return require("move"); });
+} else if (typeof define == 'function' && define.cmd){
+  var move = require("move");
+  define(function(require, exports, module){
+    module.exports = move; 
+  });
 } else {
   this["move"] = require("move");
 }})();
