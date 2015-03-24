@@ -381,7 +381,7 @@ CssEmitter.prototype.bind = function(fn){
 
 /**
  * Unbind CSS events
- * 
+ *
  * @api public
  */
 
@@ -394,7 +394,7 @@ CssEmitter.prototype.unbind = function(fn){
 
 /**
  * Fire callback only once
- * 
+ *
  * @api public
  */
 
@@ -836,9 +836,24 @@ function Move(el) {
   this._rotate = 0;
   this._transitionProps = [];
   this._transforms = [];
-  this.duration(Move.defaults.duration)
+  this.duration(Move.defaults.duration);
+  this.initializeTransforms();
 };
 
+/**
+ * Populate this._transforms from element style
+ */
+Move.prototype.initializeTransforms = function(){
+  var existingTransforms = this.el.style.getPropertyValue('-webkit-transform');
+  if(existingTransforms){
+    var currentTransforms = existingTransforms.split(/\);?\s*/);
+    for (var i = 0; i < currentTransforms.length; i++){
+      if(currentTransforms[i].length){
+        this._transforms.push(currentTransforms[i]+')')
+      }
+    }
+  }
+}
 
 /**
  * Inherit from `EventEmitter.prototype`.
@@ -855,6 +870,12 @@ Emitter(Move.prototype);
  */
 
 Move.prototype.transform = function(transform){
+  if(this._transforms.length) {
+    var checkString = transform.slice(0, transform.indexOf('('))
+    this._transforms = this._transforms.filter(function(v){
+      return v.indexOf(checkString) == -1;
+    });
+  }
   this._transforms.push(transform);
   return this;
 };
@@ -1246,7 +1267,6 @@ Move.prototype.then = function(fn){
   // chain
   } else {
     var clone = new Move(this.el);
-    clone._transforms = this._transforms.slice(0);
     this.then(clone);
     clone.parent = this;
     return clone;
