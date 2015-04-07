@@ -154,44 +154,55 @@ Move.prototype.skewY = function(n){
 /**
  * Translate `x` and `y` axis.
  *
- * @param {Number} x
- * @param {Number} y
+ * @param {Number|String} x
+ * @param {Number|String} y
  * @return {Move} for chaining
  * @api public
  */
 
 Move.prototype.translate =
 Move.prototype.to = function(x, y){
+  x = 'string' == typeof x
+    ? x
+    : x + 'px';
+  y = 'string' == typeof y
+    ? y
+    : (y || 0) + 'px';
   return this.transform(translate.join(''
-    + x +'px, '
-    + (y || 0)
-    + 'px'));
+    + x + ', '
+    + y));
 };
 
 /**
  * Translate on the x axis to `n`.
  *
- * @param {Number} n
+ * @param {Number|String} n
  * @return {Move} for chaining
  * @api public
  */
 
 Move.prototype.translateX =
 Move.prototype.x = function(n){
-  return this.transform('translateX(' + n + 'px)');
+  n = 'string' == typeof n
+    ? n
+    : n + 'px';
+  return this.transform('translateX(' + n + ')');
 };
 
 /**
  * Translate on the y axis to `n`.
  *
- * @param {Number} n
+ * @param {Number|String} n
  * @return {Move} for chaining
  * @api public
  */
 
 Move.prototype.translateY =
 Move.prototype.y = function(n){
-  return this.transform('translateY(' + n + 'px)');
+  n = 'string' == typeof n
+    ? n
+    : n + 'px';
+  return this.transform('translateY(' + n + ')');
 };
 
 /**
