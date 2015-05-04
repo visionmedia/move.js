@@ -4,7 +4,6 @@
   "repo": "visionmedia/move.js",
   "version": "0.4.0",
   "keywords": ["animation", "css3"],
-  "remotes": ["https://raw.githubusercontent.com"],
   "scripts": ["index.js"],
   "dependencies": {
     "component/has-translate3d": "*",
