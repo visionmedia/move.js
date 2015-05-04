@@ -14,8 +14,8 @@
   "dependencies": {
     "has-translate3d": "0.0.3",
     "after-transition": "0.0.4",
-    "emitter": "component/emitter",
-    "query": "component/query",
-    "css-ease": "0.0.1"
+    "css-ease": "0.0.1",
+    "component-emitter": "^1.2.0",
+    "component-query": "0.0.3"
   }
 }
