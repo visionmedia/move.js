@@ -162,12 +162,8 @@ Move.prototype.skewY = function(n){
 
 Move.prototype.translate =
 Move.prototype.to = function(x, y){
-  x = 'string' == typeof x
-    ? x
-    : x + 'px';
-  y = 'string' == typeof y
-    ? y
-    : (y || 0) + 'px';
+  x = 'string' == typeof x ? x : x + 'px';
+  y = 'string' == typeof y ? y : (y || 0) + 'px';
   return this.transform(translate.join(''
     + x + ', '
     + y));
@@ -183,9 +179,7 @@ Move.prototype.to = function(x, y){
 
 Move.prototype.translateX =
 Move.prototype.x = function(n){
-  n = 'string' == typeof n
-    ? n
-    : n + 'px';
+  n = 'string' == typeof n ? n : n + 'px';
   return this.transform('translateX(' + n + ')');
 };
 
@@ -199,9 +193,7 @@ Move.prototype.x = function(n){
 
 Move.prototype.translateY =
 Move.prototype.y = function(n){
-  n = 'string' == typeof n
-    ? n
-    : n + 'px';
+  n = 'string' == typeof n ? n : n + 'px';
   return this.transform('translateY(' + n + ')');
 };
 
