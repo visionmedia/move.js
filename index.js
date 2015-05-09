@@ -33,7 +33,7 @@ var style = window.getComputedStyle
  * Library version.
  */
 
-Move.version = '0.3.2';
+Move.version = '0.5.0';
 
 /**
  * Export `ease`
