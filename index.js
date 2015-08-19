@@ -1,3 +1,20 @@
+// Patch IE9 and below
+try {
+  document.createElement('DIV').style.setProperty('opacity', 0, '');
+} catch (error) {
+  CSSStyleDeclaration.prototype.getProperty = function(a) {
+    return this.getAttribute(a);
+  };
+  
+  CSSStyleDeclaration.prototype.setProperty = function(a,b) {
+    return this.setAttribute(a, b + '');
+  };
+
+  CSSStyleDeclaration.prototype.removeProperty = function(a) {
+    return this.removeAttribute(a);
+  };
+}
+
 /**
  * Module Dependencies.
  */
@@ -15,6 +32,7 @@ var ease = require('css-ease');
 var translate = has3d
   ? ['translate3d(', ', 0)']
   : ['translate(', ')'];
+
 
 /**
  * Export `Move`
