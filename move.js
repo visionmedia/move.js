@@ -1122,8 +1122,17 @@ Move.prototype.setVendorProperty = function(prop, val){
  */
 
 Move.prototype.set = function(prop, val){
-  this.transition(prop);
-  this._props[prop] = val;
+  if (typeof prop == "object") {
+    for (var key in prop) {
+      if (prop.hasOwnProperty(key)) {
+        this.transition(key);
+        this._props[key] = prop[key];
+      }
+    }
+  } else {
+    this.transition(prop);
+    this._props[prop] = val;  
+  } 
   return this;
 };
 
