@@ -1,3 +1,8 @@
+0.5.0 / 2015-05-09
+==================
+
+ * add npm / browserify support, closes #41 and #42 [axelpale]
+ * remove `remotes` from component.json, closes #71 [axelpale]
 
 0.4.0 / 2014-09-08
 ==================

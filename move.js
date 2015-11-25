@@ -1,39 +1,108 @@
+
 ;(function(){
 
 /**
- * Require the given path.
+ * Require the module at `name`.
  *
- * @param {String} path
+ * @param {String} name
  * @return {Object} exports
  * @api public
  */
 
-function require(path, parent, orig) {
-  var resolved = require.resolve(path);
+function require(name) {
+  var module = require.modules[name];
+  if (!module) throw new Error('failed to require "' + name + '"');
 
-  // lookup failed
-  if (null == resolved) {
-    orig = orig || path;
-    parent = parent || 'root';
-    var err = new Error('Failed to require "' + orig + '" from "' + parent + '"');
-    err.path = orig;
-    err.parent = parent;
-    err.require = true;
-    throw err;
-  }
-
-  var module = require.modules[resolved];
-
-  // perform real require()
-  // by invoking the module's
-  // registered function
-  if (!module.exports) {
-    module.exports = {};
+  if (!('exports' in module) && typeof module.definition === 'function') {
     module.client = module.component = true;
-    module.call(this, module.exports, require.relative(resolved), module);
+    module.definition.call(this, module.exports = {}, module);
+    delete module.definition;
   }
 
   return module.exports;
+}
+
+/**
+ * Meta info, accessible in the global scope unless you use AMD option.
+ */
+
+require.loader = 'component';
+
+/**
+ * Internal helper object, contains a sorting function for semantiv versioning
+ */
+require.helper = {};
+require.helper.semVerSort = function(a, b) {
+  var aArray = a.version.split('.');
+  var bArray = b.version.split('.');
+  for (var i=0; i<aArray.length; ++i) {
+    var aInt = parseInt(aArray[i], 10);
+    var bInt = parseInt(bArray[i], 10);
+    if (aInt === bInt) {
+      var aLex = aArray[i].substr((""+aInt).length);
+      var bLex = bArray[i].substr((""+bInt).length);
+      if (aLex === '' && bLex !== '') return 1;
+      if (aLex !== '' && bLex === '') return -1;
+      if (aLex !== '' && bLex !== '') return aLex > bLex ? 1 : -1;
+      continue;
+    } else if (aInt > bInt) {
+      return 1;
+    } else {
+      return -1;
+    }
+  }
+  return 0;
+}
+
+/**
+ * Find and require a module which name starts with the provided name.
+ * If multiple modules exists, the highest semver is used. 
+ * This function can only be used for remote dependencies.
+
+ * @param {String} name - module name: `user~repo`
+ * @param {Boolean} returnPath - returns the canonical require path if true, 
+ *                               otherwise it returns the epxorted module
+ */
+require.latest = function (name, returnPath) {
+  function showError(name) {
+    throw new Error('failed to find latest module of "' + name + '"');
+  }
+  // only remotes with semvers, ignore local files conataining a '/'
+  var versionRegexp = /(.*)~(.*)@v?(\d+\.\d+\.\d+[^\/]*)$/;
+  var remoteRegexp = /(.*)~(.*)/;
+  if (!remoteRegexp.test(name)) showError(name);
+  var moduleNames = Object.keys(require.modules);
+  var semVerCandidates = [];
+  var otherCandidates = []; // for instance: name of the git branch
+  for (var i=0; i<moduleNames.length; i++) {
+    var moduleName = moduleNames[i];
+    if (new RegExp(name + '@').test(moduleName)) {
+        var version = moduleName.substr(name.length+1);
+        var semVerMatch = versionRegexp.exec(moduleName);
+        if (semVerMatch != null) {
+          semVerCandidates.push({version: version, name: moduleName});
+        } else {
+          otherCandidates.push({version: version, name: moduleName});
+        } 
+    }
+  }
+  if (semVerCandidates.concat(otherCandidates).length === 0) {
+    showError(name);
+  }
+  if (semVerCandidates.length > 0) {
+    var module = semVerCandidates.sort(require.helper.semVerSort).pop().name;
+    if (returnPath === true) {
+      return module;
+    }
+    return require(module);
+  }
+  // if the build contains more than one branch of the same module
+  // you should not use this funciton
+  var module = otherCandidates.sort(function(a, b) {return a.name > b.name})[0].name;
+  if (returnPath === true) {
+    return module;
+  }
+  return require(module);
 }
 
 /**
@@ -43,160 +112,33 @@ function require(path, parent, orig) {
 require.modules = {};
 
 /**
- * Registered aliases.
- */
-
-require.aliases = {};
-
-/**
- * Resolve `path`.
+ * Register module at `name` with callback `definition`.
  *
- * Lookup:
- *
- *   - PATH/index.js
- *   - PATH.js
- *   - PATH
- *
- * @param {String} path
- * @return {String} path or null
- * @api private
- */
-
-require.resolve = function(path) {
-  if (path.charAt(0) === '/') path = path.slice(1);
-
-  var paths = [
-    path,
-    path + '.js',
-    path + '.json',
-    path + '/index.js',
-    path + '/index.json'
-  ];
-
-  for (var i = 0; i < paths.length; i++) {
-    var path = paths[i];
-    if (require.modules.hasOwnProperty(path)) return path;
-    if (require.aliases.hasOwnProperty(path)) return require.aliases[path];
-  }
-};
-
-/**
- * Normalize `path` relative to the current path.
- *
- * @param {String} curr
- * @param {String} path
- * @return {String}
- * @api private
- */
-
-require.normalize = function(curr, path) {
-  var segs = [];
-
-  if ('.' != path.charAt(0)) return path;
-
-  curr = curr.split('/');
-  path = path.split('/');
-
-  for (var i = 0; i < path.length; ++i) {
-    if ('..' == path[i]) {
-      curr.pop();
-    } else if ('.' != path[i] && '' != path[i]) {
-      segs.push(path[i]);
-    }
-  }
-
-  return curr.concat(segs).join('/');
-};
-
-/**
- * Register module at `path` with callback `definition`.
- *
- * @param {String} path
+ * @param {String} name
  * @param {Function} definition
  * @api private
  */
 
-require.register = function(path, definition) {
-  require.modules[path] = definition;
+require.register = function (name, definition) {
+  require.modules[name] = {
+    definition: definition
+  };
 };
 
 /**
- * Alias a module definition.
+ * Define a module's exports immediately with `exports`.
  *
- * @param {String} from
- * @param {String} to
+ * @param {String} name
+ * @param {Generic} exports
  * @api private
  */
 
-require.alias = function(from, to) {
-  if (!require.modules.hasOwnProperty(from)) {
-    throw new Error('Failed to alias "' + from + '", it does not exist');
-  }
-  require.aliases[to] = from;
-};
-
-/**
- * Return a require function relative to the `parent` path.
- *
- * @param {String} parent
- * @return {Function}
- * @api private
- */
-
-require.relative = function(parent) {
-  var p = require.normalize(parent, '..');
-
-  /**
-   * lastIndexOf helper.
-   */
-
-  function lastIndexOf(arr, obj) {
-    var i = arr.length;
-    while (i--) {
-      if (arr[i] === obj) return i;
-    }
-    return -1;
-  }
-
-  /**
-   * The relative require() itself.
-   */
-
-  function localRequire(path) {
-    var resolved = localRequire.resolve(path);
-    return require(resolved, parent, path);
-  }
-
-  /**
-   * Resolve relative to the parent.
-   */
-
-  localRequire.resolve = function(path) {
-    var c = path.charAt(0);
-    if ('/' == c) return path.slice(1);
-    if ('.' == c) return require.normalize(p, path);
-
-    // resolve deps by returning
-    // the dep in the nearest "deps"
-    // directory
-    var segs = parent.split('/');
-    var i = lastIndexOf(segs, 'deps') + 1;
-    if (!i) i = 0;
-    path = segs.slice(0, i + 1).join('/') + '/deps/' + path;
-    return path;
+require.define = function (name, exports) {
+  require.modules[name] = {
+    exports: exports
   };
-
-  /**
-   * Check if module is defined at `path`.
-   */
-
-  localRequire.exists = function(path) {
-    return require.modules.hasOwnProperty(localRequire.resolve(path));
-  };
-
-  return localRequire;
 };
-require.register("component-transform-property/index.js", function(exports, require, module){
+require.register("component~transform-property@0.0.1", function (exports, module) {
 
 var styles = [
   'webkitTransform',
@@ -218,9 +160,10 @@ for (var i = 0; i < styles.length; i++) {
 }
 
 });
-require.register("component-has-translate3d/index.js", function(exports, require, module){
 
-var prop = require('transform-property');
+require.register("component~has-translate3d@0.0.3", function (exports, module) {
+
+var prop = require('component~transform-property@0.0.1');
 
 // IE <=8 doesn't have `getComputedStyle`
 if (!prop || !window.getComputedStyle) {
@@ -245,7 +188,8 @@ if (!prop || !window.getComputedStyle) {
 }
 
 });
-require.register("yields-has-transitions/index.js", function(exports, require, module){
+
+require.register("yields~has-transitions@1.0.0", function (exports, module) {
 /**
  * Check if `el` or browser supports transitions.
  *
@@ -293,7 +237,8 @@ var bool = 'transition' in styl
   || 'msTransition' in styl;
 
 });
-require.register("component-event/index.js", function(exports, require, module){
+
+require.register("component~event@0.1.4", function (exports, module) {
 var bind = window.addEventListener ? 'addEventListener' : 'attachEvent',
     unbind = window.removeEventListener ? 'removeEventListener' : 'detachEvent',
     prefix = bind !== 'addEventListener' ? 'on' : '';
@@ -330,12 +275,13 @@ exports.unbind = function(el, type, fn, capture){
   return fn;
 };
 });
-require.register("ecarter-css-emitter/index.js", function(exports, require, module){
+
+require.register("ecarter~css-emitter@0.0.1", function (exports, module) {
 /**
  * Module Dependencies
  */
 
-var events = require('event');
+var events = require('component~event@0.1.4');
 
 // CSS events
 
@@ -410,7 +356,8 @@ CssEmitter.prototype.once = function(fn){
 
 
 });
-require.register("component-once/index.js", function(exports, require, module){
+
+require.register("component~once@0.0.1", function (exports, module) {
 
 /**
  * Identifier.
@@ -434,13 +381,12 @@ var global = (function(){ return this })();
 
 module.exports = function(fn) {
   var id = n++;
-  var called;
 
   function once(){
     // no receiver
     if (this == global) {
-      if (called) return;
-      called = true;
+      if (once.called) return;
+      once.called = true;
       return fn.apply(this, arguments);
     }
 
@@ -455,15 +401,16 @@ module.exports = function(fn) {
 };
 
 });
-require.register("yields-after-transition/index.js", function(exports, require, module){
+
+require.register("yields~after-transition@0.0.1", function (exports, module) {
 
 /**
  * dependencies
  */
 
-var has = require('has-transitions')
-  , emitter = require('css-emitter')
-  , once = require('once');
+var has = require('yields~has-transitions@1.0.0')
+  , emitter = require('ecarter~css-emitter@0.0.1')
+  , once = require('component~once@0.0.1');
 
 /**
  * Transition support.
@@ -515,7 +462,8 @@ after.once = function(el, fn){
 };
 
 });
-require.register("component-emitter/index.js", function(exports, require, module){
+
+require.register("component~emitter@1.2.0", function (exports, module) {
 
 /**
  * Expose `Emitter`.
@@ -560,7 +508,7 @@ function mixin(obj) {
 Emitter.prototype.on =
 Emitter.prototype.addEventListener = function(event, fn){
   this._callbacks = this._callbacks || {};
-  (this._callbacks[event] = this._callbacks[event] || [])
+  (this._callbacks['$' + event] = this._callbacks['$' + event] || [])
     .push(fn);
   return this;
 };
@@ -576,11 +524,8 @@ Emitter.prototype.addEventListener = function(event, fn){
  */
 
 Emitter.prototype.once = function(event, fn){
-  var self = this;
-  this._callbacks = this._callbacks || {};
-
   function on() {
-    self.off(event, on);
+    this.off(event, on);
     fn.apply(this, arguments);
   }
 
@@ -612,12 +557,12 @@ Emitter.prototype.removeEventListener = function(event, fn){
   }
 
   // specific event
-  var callbacks = this._callbacks[event];
+  var callbacks = this._callbacks['$' + event];
   if (!callbacks) return this;
 
   // remove all handlers
   if (1 == arguments.length) {
-    delete this._callbacks[event];
+    delete this._callbacks['$' + event];
     return this;
   }
 
@@ -644,7 +589,7 @@ Emitter.prototype.removeEventListener = function(event, fn){
 Emitter.prototype.emit = function(event){
   this._callbacks = this._callbacks || {};
   var args = [].slice.call(arguments, 1)
-    , callbacks = this._callbacks[event];
+    , callbacks = this._callbacks['$' + event];
 
   if (callbacks) {
     callbacks = callbacks.slice(0);
@@ -666,7 +611,7 @@ Emitter.prototype.emit = function(event){
 
 Emitter.prototype.listeners = function(event){
   this._callbacks = this._callbacks || {};
-  return this._callbacks[event] || [];
+  return this._callbacks['$' + event] || [];
 };
 
 /**
@@ -682,7 +627,8 @@ Emitter.prototype.hasListeners = function(event){
 };
 
 });
-require.register("yields-css-ease/index.js", function(exports, require, module){
+
+require.register("yields~css-ease@0.0.1", function (exports, module) {
 
 /**
  * CSS Easing functions
@@ -721,7 +667,8 @@ module.exports = {
 };
 
 });
-require.register("component-query/index.js", function(exports, require, module){
+
+require.register("component~query@0.0.3", function (exports, module) {
 function one(selector, el) {
   return el.querySelector(selector);
 }
@@ -745,16 +692,17 @@ exports.engine = function(obj){
 };
 
 });
-require.register("move/index.js", function(exports, require, module){
+
+require.register("move", function (exports, module) {
 /**
  * Module Dependencies.
  */
 
-var after = require('after-transition');
-var has3d = require('has-translate3d');
-var Emitter = require('emitter');
-var ease = require('css-ease');
-var query = require('query');
+var Emitter = require('component~emitter@1.2.0');
+var query = require('component~query@0.0.3');
+var after = require('yields~after-transition@0.0.1');
+var has3d = require('component~has-translate3d@0.0.3');
+var ease = require('yields~css-ease@0.0.1');
 
 /**
  * CSS Translate
@@ -781,7 +729,7 @@ var style = window.getComputedStyle
  * Library version.
  */
 
-Move.version = '0.3.2';
+Move.version = '0.5.0';
 
 /**
  * Export `ease`
@@ -1318,41 +1266,11 @@ Move.prototype.end = function(fn){
 
 });
 
-
-
-
-
-
-
-require.alias("component-has-translate3d/index.js", "move/deps/has-translate3d/index.js");
-require.alias("component-has-translate3d/index.js", "has-translate3d/index.js");
-require.alias("component-transform-property/index.js", "component-has-translate3d/deps/transform-property/index.js");
-
-require.alias("yields-after-transition/index.js", "move/deps/after-transition/index.js");
-require.alias("yields-after-transition/index.js", "move/deps/after-transition/index.js");
-require.alias("yields-after-transition/index.js", "after-transition/index.js");
-require.alias("yields-has-transitions/index.js", "yields-after-transition/deps/has-transitions/index.js");
-require.alias("yields-has-transitions/index.js", "yields-after-transition/deps/has-transitions/index.js");
-require.alias("yields-has-transitions/index.js", "yields-has-transitions/index.js");
-require.alias("ecarter-css-emitter/index.js", "yields-after-transition/deps/css-emitter/index.js");
-require.alias("component-event/index.js", "ecarter-css-emitter/deps/event/index.js");
-
-require.alias("component-once/index.js", "yields-after-transition/deps/once/index.js");
-
-require.alias("yields-after-transition/index.js", "yields-after-transition/index.js");
-require.alias("component-emitter/index.js", "move/deps/emitter/index.js");
-require.alias("component-emitter/index.js", "emitter/index.js");
-
-require.alias("yields-css-ease/index.js", "move/deps/css-ease/index.js");
-require.alias("yields-css-ease/index.js", "move/deps/css-ease/index.js");
-require.alias("yields-css-ease/index.js", "css-ease/index.js");
-require.alias("yields-css-ease/index.js", "yields-css-ease/index.js");
-require.alias("component-query/index.js", "move/deps/query/index.js");
-require.alias("component-query/index.js", "query/index.js");
 if (typeof exports == "object") {
   module.exports = require("move");
 } else if (typeof define == "function" && define.amd) {
-  define(function(){ return require("move"); });
+  define("move", [], function(){ return require("move"); });
 } else {
-  this["move"] = require("move");
-}})();
+  (this || window)["move"] = require("move");
+}
+})()
