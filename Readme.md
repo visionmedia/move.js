@@ -11,7 +11,7 @@
 
 ## Installation
 
-  With [component(1)](http://component.io):
+  With [component(1)](http://component.github.io):
 
     $ component install visionmedia/move.js
 
