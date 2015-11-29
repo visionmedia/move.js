@@ -1,0 +1,21 @@
+{
+  "name": "movejs",
+  "version": "0.5.0",
+  "description": "CSS3 backed JavaScript animation framework",
+  "keywords": [
+    "animation",
+    "css3"
+  ],
+  "homepage": "http://visionmedia.github.io/move.js/",
+  "license": "MIT",
+  "author": "tj",
+  "main": "index.js",
+  "repository": "visionmedia/move.js",
+  "dependencies": {
+    "has-translate3d": "0.0.3",
+    "after-transition": "0.0.4",
+    "css-ease": "0.0.1",
+    "component-emitter": "^1.2.0",
+    "component-query": "0.0.3"
+  }
+}
