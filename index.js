@@ -154,8 +154,8 @@ Move.prototype.skewY = function(n){
 /**
  * Translate `x` and `y` axis.
  *
- * @param {Number} x
- * @param {Number} y
+ * @param {Number|String} x
+ * @param {Number|String} y
  * @return {Move} for chaining
  * @api public
  */
@@ -163,35 +163,34 @@ Move.prototype.skewY = function(n){
 Move.prototype.translate =
 Move.prototype.to = function(x, y){
   return this.transform(translate.join(''
-    + x +'px, '
-    + (y || 0)
-    + 'px'));
+    + fixUnits(x) + ', '
+    + fixUnits(y || 0)));
 };
 
 /**
  * Translate on the x axis to `n`.
  *
- * @param {Number} n
+ * @param {Number|String} n
  * @return {Move} for chaining
  * @api public
  */
 
 Move.prototype.translateX =
 Move.prototype.x = function(n){
-  return this.transform('translateX(' + n + 'px)');
+  return this.transform('translateX(' + fixUnits(n) + ')');
 };
 
 /**
  * Translate on the y axis to `n`.
  *
- * @param {Number} n
+ * @param {Number|String} n
  * @return {Move} for chaining
  * @api public
  */
 
 Move.prototype.translateY =
 Move.prototype.y = function(n){
-  return this.transform('translateY(' + n + 'px)');
+  return this.transform('translateY(' + fixUnits(n) + ')');
 };
 
 /**
@@ -567,3 +566,15 @@ Move.prototype.end = function(fn){
 
   return this;
 };
+
+/**
+ * Fix value units
+ *
+ * @param {Number|String} val
+ * @return {String}
+ * @api private
+ */
+
+function fixUnits(val) {
+  return 'string' === typeof val && isNaN(+val) ? val : val + 'px';
+}
