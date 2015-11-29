@@ -162,11 +162,9 @@ Move.prototype.skewY = function(n){
 
 Move.prototype.translate =
 Move.prototype.to = function(x, y){
-  x = 'string' == typeof x ? x : x + 'px';
-  y = 'string' == typeof y ? y : (y || 0) + 'px';
   return this.transform(translate.join(''
-    + x + ', '
-    + y));
+    + fixUnits(x) + ', '
+    + fixUnits(y || 0)));
 };
 
 /**
@@ -179,8 +177,7 @@ Move.prototype.to = function(x, y){
 
 Move.prototype.translateX =
 Move.prototype.x = function(n){
-  n = 'string' == typeof n ? n : n + 'px';
-  return this.transform('translateX(' + n + ')');
+  return this.transform('translateX(' + fixUnits(n) + ')');
 };
 
 /**
@@ -193,8 +190,7 @@ Move.prototype.x = function(n){
 
 Move.prototype.translateY =
 Move.prototype.y = function(n){
-  n = 'string' == typeof n ? n : n + 'px';
-  return this.transform('translateY(' + n + ')');
+  return this.transform('translateY(' + fixUnits(n) + ')');
 };
 
 /**
@@ -570,3 +566,15 @@ Move.prototype.end = function(fn){
 
   return this;
 };
+
+/**
+ * Fix value units
+ *
+ * @param {Number|String} val
+ * @return {String}
+ * @api private
+ */
+
+function fixUnits(val) {
+  return 'string' === typeof val && isNaN(+val) ? val : val + 'px';
+}
