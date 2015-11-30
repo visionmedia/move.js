@@ -3,6 +3,7 @@
 
  * add npm / browserify support, closes #41 and #42 [axelpale]
  * remove `remotes` from component.json, closes #71 [axelpale]
+ * add legacy IE browsers support [nobuti]
 
 0.4.0 / 2014-09-08
 ==================
