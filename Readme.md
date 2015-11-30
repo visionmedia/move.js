@@ -15,6 +15,10 @@
 
     $ component install visionmedia/move.js
 
+  With [npm](https://www.npmjs.com/package/move-js):
+
+    $ npm install move-js
+
   With a stand-alone build
 
     <script src='move.min.js'></script>
