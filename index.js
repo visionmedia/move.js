@@ -1,20 +1,3 @@
-// Patch IE9 and below
-try {
-  document.createElement('DIV').style.setProperty('opacity', 0, '');
-} catch (error) {
-  CSSStyleDeclaration.prototype.getProperty = function(a) {
-    return this.getAttribute(a);
-  };
-  
-  CSSStyleDeclaration.prototype.setProperty = function(a,b) {
-    return this.setAttribute(a, b + '');
-  };
-
-  CSSStyleDeclaration.prototype.removeProperty = function(a) {
-    return this.removeAttribute(a);
-  };
-}
-
 /**
  * Module Dependencies.
  */
@@ -25,27 +8,12 @@ var after = require('after-transition');
 var has3d = require('has-translate3d');
 var ease = require('css-ease');
 
-/**
- * CSS Translate
- */
-
-var translate = has3d
-  ? ['translate3d(', ', 0)']
-  : ['translate(', ')'];
-
 
 /**
  * Export `Move`
  */
 
 module.exports = Move;
-
-/**
- * Get computed style.
- */
-
-var style = window.getComputedStyle
-  || window.currentStyle;
 
 /**
  * Library version.
@@ -69,6 +37,7 @@ Move.ease = ease;
 Move.defaults = {
   duration: 500
 };
+
 
 /**
  * Default element selection utilized by `move(selector)`.
@@ -585,6 +554,7 @@ Move.prototype.end = function(fn){
   return this;
 };
 
+
 /**
  * Fix value units
  *
@@ -596,3 +566,41 @@ Move.prototype.end = function(fn){
 function fixUnits(val) {
   return 'string' === typeof val && isNaN(+val) ? val : val + 'px';
 }
+
+
+// Helpers
+
+/**
+ * CSS Translate
+ */
+
+var translate = has3d
+  ? ['translate3d(', ', 0)']
+  : ['translate(', ')'];
+
+/**
+ * Get computed style.
+ */
+
+var style = window.getComputedStyle
+  || window.currentStyle;
+
+/**
+ * Patch IE9 and below
+ */
+try {
+  document.createElement('DIV').style.setProperty('opacity', 0, '');
+} catch (error) {
+  CSSStyleDeclaration.prototype.getProperty = function(a) {
+    return this.getAttribute(a);
+  };
+
+  CSSStyleDeclaration.prototype.setProperty = function(a,b) {
+    return this.setAttribute(a, b + '');
+  };
+
+  CSSStyleDeclaration.prototype.removeProperty = function(a) {
+    return this.removeAttribute(a);
+  };
+}
+
