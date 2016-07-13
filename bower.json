@@ -1,0 +1,23 @@
+{
+  "name": "move-js",
+  "version": "0.5.0",
+  "description": "CSS3 backed JavaScript animation framework",
+  "keywords": [
+    "animation",
+    "css3"
+  ],
+  "homepage": "http://visionmedia.github.io/move.js",
+  "license": "MIT",
+  "authors": [
+    "TJ Holowaychuk <tj@vision-media.ca>"
+  ],
+  "main": "index.js",
+  "ignore": [
+    "examples",
+    "Makefile",
+    "component.json",
+    "package.json"
+  ],
+  "dependencies": {
+  }
+}
