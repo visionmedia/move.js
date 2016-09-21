@@ -23,7 +23,7 @@
 
     <script src='move.min.js'></script>
 
-
+  CDN: [http://www.jsdelivr.com/projects/move.js](http://www.jsdelivr.com/projects/move.js)
 ## Example
 
   For example below we translate to the point `(500px, 200px)`,
