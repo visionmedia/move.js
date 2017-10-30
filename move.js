@@ -1239,6 +1239,17 @@ Move.prototype.reset = function(){
 };
 
 /**
+ * Reflow DOM element
+ *
+ * @return {Move}
+ * @api public
+ */
+Move.prototype.reflow = function(){
+  this.el.offsetTop;
+  return this;
+};
+
+/**
  * Start animation, optionally calling `fn` when complete.
  *
  * @param {Function} fn
