@@ -29,7 +29,7 @@ function require(name) {
 require.loader = 'component';
 
 /**
- * Internal helper object, contains a sorting function for semantiv versioning
+ * Internal helper object, contains a sorting function for semantic versioning
  */
 require.helper = {};
 require.helper.semVerSort = function(a, b) {
