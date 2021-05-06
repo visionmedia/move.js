@@ -251,6 +251,26 @@ Move.prototype.rotate = function(n){
 };
 
 /**
+ *
+ * @param  {Number} n
+ * @returns {Move} for chaining
+ * @api public
+ */
+Move.prototype.rotateX = function(n){
+  return this.transform('rotateX(' + n + 'deg)');
+};
+
+/**
+ *
+ * @param {Number} n
+ * @returns {Move} for chaining
+ * @api public
+ */
+Move.prototype.rotateY = function(n){
+  return this.transform('rotateY(' + n + 'deg)');
+};
+
+/**
  * Set transition easing function to to `fn` string.
  *
  * When:
